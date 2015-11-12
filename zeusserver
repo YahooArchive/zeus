@@ -1,0 +1,81 @@
+/*
+ * Copyright (c) 2015, Yahoo Inc. All rights reserved.
+ * Copyrights licensed under the New BSD License.
+ * See the accompanying LICENSE file for terms.
+ */
+
+#!/bin/env node
+
+if (process.argv.length < 3) {
+  console.log('Usage: ' + process.argv[1] + ' configuration-file.js');
+  process.exit(1);
+
+} else {
+  var Configuration,
+    http = require('http'),
+    url = require('url'),
+    key,
+    keys = [],
+    valid = true,
+    file = process.argv[2],
+    version = Math.round(new Date() / 1000);
+
+  try {
+    Configuration = require(process.argv[2]).Configuration;
+  } catch (exception) {
+    console.log(exception);
+    valid = false;
+  }
+
+  if (valid) {
+    valid = typeof Configuration === "function"
+        && !!Configuration.prototype;
+  }
+
+  if ( ! valid) {
+    console.error('invalid file ' + file);
+    process.exit(1);
+  }
+
+  for (key in Configuration.prototype) {
+    if (Configuration.prototype.hasOwnProperty(key)) {
+      keys.push(key);
+    }
+  }
+
+  keys.sort();
+
+  http.createServer(function (q, s) {
+    var query = url.parse(q.url, true).query,
+      configuration = new Configuration(query),
+      key,
+      myKeys = typeof query["keys"] === "string"
+          ? query["keys"].split(",") : [],
+      result = {},
+      dimensions = {},
+      i;
+
+    for (i = 0; i < keys.length; ++i) {
+      key = keys[i];
+      if (myKeys.length === 0 || myKeys.indexOf(key) >= 0) {
+        result[key] = configuration[key]();
+      }
+    }
+
+    for (key in configuration) {
+      if (key === '_cache') continue;
+
+      if (configuration.hasOwnProperty(key) && configuration[key] > 0) {
+        dimensions[key] = query[key];
+      }
+    }
+
+    s.writeHead(200, {'Content-Type': 'application/json'});
+
+    s.end(JSON.stringify({
+      context: dimensions,
+      data: result,
+      version: parseInt(query['version']) || version
+    }));
+  }).listen(4080);
+}
