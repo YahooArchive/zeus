@@ -1,3 +1,6 @@
+# special dirs
+output
+
 # vim swap files
 .*.sw?
 

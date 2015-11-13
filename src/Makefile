@@ -48,5 +48,5 @@ $(OBJS) : %.o : %.cc
 	$(CXX) $(CXXFLAGS) -c $^ -o $@;
 
 clean:
-	@rm -fv *.o
+	@rm -f *.o
 

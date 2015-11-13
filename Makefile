@@ -8,9 +8,9 @@ CXXFLAGS += -g --std=c++11 -fPIC -Wall -I$(YAML_CPP_INCLUDE_PATH)
 ENABLE_ASAN ?= false
 GDB ?= gdb
 CONFIGS := $(shell find conf -name "*.yaml")
-
 SRC := $(shell find src -name "*.cc")
 OBJS := $(patsubst %.cc, %.o, $(SRC))
+OUTDIR := output
 
 ifeq ($(ENABLE_ASAN), true)
 	CXXFLAGS += -fsanitize=address
@@ -20,12 +20,28 @@ endif
 
 -include Makefile.local
 
-all: $(OBJS) main
-	mkdir -p cc2
-	./$< $(CONFIGS) --cpp-code > cc2/configuration.cc
-	./$< $(CONFIGS) --cpp-header > cc2/configuration.h
-	./$< $(CONFIGS) --cpp-json-code > cc2/configuration-json.cc
-	./$< $(CONFIGS) --cpp-json-header > cc2/configuration-json.h
+all: main $(OUTDIR) $(OUTDIR)/configuration.cc $(OUTDIR)/configuration.h $(OUTDIR)/configuration-json.cc $(OUTDIR)/configuration-json.h $(OUTDIR)/configuration.js $(OUTDIR)/configuration.php
+
+$(OUTDIR):
+	mkdir -p $(OUTDIR)
+
+$(OUTDIR)/configuration.cc: main
+	./$< $(CONFIGS) --cpp-code > $(OUTDIR)/configuration.cc
+
+$(OUTDIR)/configuration.h: main
+	./$< $(CONFIGS) --cpp-header > $(OUTDIR)/configuration.h
+
+$(OUTDIR)/configuration-json.cc: main
+	./$< $(CONFIGS) --cpp-json-code > $(OUTDIR)/configuration-json.cc
+
+$(OUTDIR)/configuration-json.h: main
+	./$< $(CONFIGS) --cpp-json-header > $(OUTDIR)/configuration-json.h
+
+$(OUTDIR)/configuration.js: main
+	./$< $(CONFIGS) --js > $(OUTDIR)/configuration.js
+
+$(OUTDIR)/configuration.php: main
+	./$< $(CONFIGS) --php > $(OUTDIR)/configuration.php
 
 $(OBJS): $(SRC)
 	cd src && make
@@ -44,7 +60,7 @@ main: $(OBJS) yaml-cpp/libyaml-cpp.a
 
 test: php js
 
-php: main test1.js $(CONFIGS)
+php: main $(OUTDIR)/configuration.php $(CONFIGS)
 	@OUTPUT=`./$< | php 2>&1;`; \
 		if [[ -n "$$OUTPUT" ]]; then \
 			./$< | cat -n; \
@@ -56,7 +72,7 @@ php: main test1.js $(CONFIGS)
 
 	(./$< --php $(CONFIGS); cat ./test1.php) | php > /dev/null
 
-js: main test1.js $(CONFIGS)
+js: main $(OUTDIR)/configuration.js $(CONFIGS)
 	@OUTPUT=`./$<  --js | node 2>&1;`; \
 		if [[ -n "$$OUTPUT" ]]; then \
 			./$< | cat -n; \
@@ -66,7 +82,7 @@ js: main test1.js $(CONFIGS)
 			exit 0; \
 		fi
 
-	(./$< --js $(CONFIGS); cat ./test1.js) | node > /dev/null
+	(./$< --js $(CONFIGS)) | node > /dev/null
 
 
 yaml-cpp/include/yaml-cpp/yaml.h yaml-cpp/CMakeLists.txt dep:
@@ -83,4 +99,4 @@ lines:
 
 clean:
 	@cd src && make clean;
-	@rm -fv main;
+	@rm -fr main output;
