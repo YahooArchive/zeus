@@ -11,6 +11,14 @@ Currently, the following languages are supported:
  * JavaScript
  * PHP
 
+## Build Dependencies
+ * C++ compiler with C++11 support
+   * gcc >= 4.8
+   * clang >= 3.3
+ * boost >= 1.49
+ * cmake
+ * [https://github.com/jbeder/yaml-cpp](yamlcpp) (already a submodule)
+
 ## Example
 ```
 ---
@@ -28,7 +36,7 @@ Currently, the following languages are supported:
   date_format: DD/MM/YYYY
 ```
 
-generates the following javascript code:
+generates the following _JavaScript_ code:
 
 ```
 function date_format() {
