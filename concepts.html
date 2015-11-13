@@ -72,8 +72,8 @@ set of keys it defines values for. This set of keys is well-defined, and the cod
 using the configuration can expect all keys to be defined for any given request.
 As such, we declare the keys available from a given configuration along with its
 base value to use if it isn&#8217;t set for a particular request context.</p>
-<p>All keys must be assigned a type and default value. To define the default value
-a key will be defined in the &#8220;master&#8221; context. Here is an example:</p>
+<p>All keys must be assigned a type and default value and must exist in the &#8220;master&#8221;
+context. Here is an example:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
 <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
   <span class="l-Scalar-Plain">greeting</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hello world</span>

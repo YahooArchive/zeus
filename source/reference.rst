@@ -21,7 +21,7 @@ Supporting Technology
 YAML
 ----
 
-**YAML** - a superset of JSON which is easier for humans to generate. Here is the latest `YAML 1.3 spec <http://www.yaml.org/spec/1.2/spec.html>`_ and there is also an `online YAML editor <http://yaml-online-parser.appspot.com/>`_
+**YAML** - a superset of JSON which is easier for humans to generate. Here is the latest `YAML 1.2 spec <http://www.yaml.org/spec/1.2/spec.html>`_ and there is also an `online YAML editor <http://yaml-online-parser.appspot.com/>`_
 
 JSON
 ----

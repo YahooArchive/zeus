@@ -42,8 +42,8 @@ using the configuration can expect all keys to be defined for any given request.
 As such, we declare the keys available from a given configuration along with its
 base value to use if it isn't set for a particular request context.
 
-All keys must be assigned a type and default value. To define the default value
-a key will be defined in the "master" context. Here is an example:
+All keys must be assigned a type and default value and must exist in the "master"
+context. Here is an example:
 
 .. code-block:: yaml
 

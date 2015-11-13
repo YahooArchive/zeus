@@ -17,7 +17,7 @@ Terminology
 Here is a common set of terms that are used throughout this document:
 
 - **JSON** - a commonly used data interchange format. Here is the `JSON spec <http://json.org/>`_ and there is also an `online JSON editor <http://jsoneditoronline.org/>`_
-- **YAML** - a superset of JSON which is easier for humans to generate. Here is the latest `YAML 1.3 spec <http://www.yaml.org/spec/1.2/spec.html>`_ and there is also an `online YAML editor <http://yaml-online-parser.appspot.com/>`_
+- **YAML** - a superset of JSON which is easier for humans to generate. Here is the latest `YAML 1.2 spec <http://www.yaml.org/spec/1.2/spec.html>`_ and there is also an `online YAML editor <http://yaml-online-parser.appspot.com/>`_
 - **Source Config** - raw YAML-based configuration for example `these files <https://github.com/yahoo/zeus/tree/master/conf>`_
 - **Compiled Config** - the output of the component job, typically in the form of native code
 - **Config Version** - a build-time version of the compiled configuration, currently a UNIX epoch timestamp

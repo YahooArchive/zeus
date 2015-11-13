@@ -93,6 +93,7 @@ Contributors
  - Marco Aurelio Carvalho
  - Scott Beardsley
  - Rodrigo Setti
+ - Wooseok Jeong
 
 License
 =======
