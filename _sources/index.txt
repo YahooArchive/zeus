@@ -92,6 +92,7 @@ Contributors
  - Benedicto Franco Jr.
  - Marco Aurelio Carvalho
  - Scott Beardsley
+ - Rodrigo Setti
 
 License
 =======
