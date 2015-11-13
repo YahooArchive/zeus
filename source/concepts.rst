@@ -84,7 +84,7 @@ The following is an example of a configuration using strings:
      is_string: !!str 1
 
    - context: { region: australia }
-     greeting: "Cheers! �"
+     greeting: "Cheers! 🍺"
 
 .. note:: the "!!str" tag denotes the value is a string
 
