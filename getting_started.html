@@ -77,8 +77,8 @@ in the background can help validate that the changes look correct.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">You might want to run this in a new terminal window</p>
 </div>
-<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>make run
-./mon conf/* <span class="s1">&#39;`find ./conf -type f -name \*.yaml 2&gt;/dev/null | sort -u;`&#39;</span>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>make api
+mon conf/* <span class="s1">&#39;`find ./conf -type f -name \*.yaml 2&gt;/dev/null | sort -u;`&#39;</span>
 5424: old priority 0, new priority 19
 File is /tmp/tmp.55VPmZmx9F
 <span class="m">1446540458</span> Restarting server.

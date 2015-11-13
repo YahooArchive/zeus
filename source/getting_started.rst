@@ -43,8 +43,8 @@ in the background can help validate that the changes look correct.
 
 .. code-block:: shell
 
-   $ make run
-   ./mon conf/* '`find ./conf -type f -name \*.yaml 2>/dev/null | sort -u;`'
+   $ make api
+   mon conf/* '`find ./conf -type f -name \*.yaml 2>/dev/null | sort -u;`'
    5424: old priority 0, new priority 19
    File is /tmp/tmp.55VPmZmx9F
    1446540458 Restarting server.
