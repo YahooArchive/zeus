@@ -41,4 +41,4 @@ function date_format() {
 };
 ```
 ## Compiler's architectural diagram
-![Diagram](diagram.png?raw=true)
+![Diagram](doc/compiler-arch.png?raw=true)
