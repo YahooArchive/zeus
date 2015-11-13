@@ -1,0 +1,40 @@
+# Copyright (c) 2015, Yahoo Inc. All rights reserved.
+# Copyrights licensed under the New BSD License.
+# See the accompanying LICENSE file for terms.
+
+---
+- settings: master
+
+  provider:
+    host:
+      - !recolor gray
+    path: x
+    port: 1
+    shouldRun: off
+    timeout: 10
+    clas:
+      name: brown
+      address: x
+    parameters: !!dynamic
+      a: true
+      b: true
+
+  color: !colors gray
+
+  myArray:
+    - hello
+    - world
+
+  myHash: !!dynamic
+    key: Hello
+    value: World
+
+  parameter: !!dynamic
+    p:
+      timeout: 10
+      type: string
+      array: yes
+    n:
+      timeout: 10
+      type: number
+      array: on
