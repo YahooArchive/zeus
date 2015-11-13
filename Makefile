@@ -60,30 +60,11 @@ main: $(OBJS) yaml-cpp/libyaml-cpp.a
 
 test: php js
 
-php: main $(OUTDIR)/configuration.php $(CONFIGS)
-	@OUTPUT=`./$< | php 2>&1;`; \
-		if [[ -n "$$OUTPUT" ]]; then \
-			./$< | cat -n; \
-			echo -e "ERROR: [22;31m$$OUTPUT[0m"; \
-			exit 1; \
-		else \
-			exit 0; \
-		fi
+php: main tests/test1.php $(CONFIGS)
+	(./$< --php $(CONFIGS); cat tests/test1.php) | php > /dev/null
 
-	(./$< --php $(CONFIGS); cat ./test1.php) | php > /dev/null
-
-js: main $(OUTDIR)/configuration.js $(CONFIGS)
-	@OUTPUT=`./$<  --js | node 2>&1;`; \
-		if [[ -n "$$OUTPUT" ]]; then \
-			./$< | cat -n; \
-			echo -e "ERROR: [22;31m$$OUTPUT[0m"; \
-			exit 1; \
-		else \
-			exit 0; \
-		fi
-
-	(./$< --js $(CONFIGS)) | node > /dev/null
-
+js: main tests/test1.js $(CONFIGS)
+	(./$< --js $(CONFIGS); cat tests/test1.js) | node > /dev/null
 
 yaml-cpp/include/yaml-cpp/yaml.h yaml-cpp/CMakeLists.txt dep:
 	git submodule update --init $<;
