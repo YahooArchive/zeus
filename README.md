@@ -1,5 +1,7 @@
 # Zeus Configuration Compiler
 
+[![Build Status](https://travis-ci.org/yahoo/zeus.svg)](https://travis-ci.org/yahoo/zeus)
+
 Compiles YAML input file into source code.
 
 Currently, the following languages are supported:
