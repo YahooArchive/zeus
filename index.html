@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to Zeus’s documentation! &mdash; Zeus 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Zeus 1.0 documentation" href="#" />
+    <link rel="next" title="Overview" href="overview.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-zeus-s-documentation">
+<h1>Welcome to Zeus&#8217;s documentation!<a class="headerlink" href="#welcome-to-zeus-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#what-is-zeus">What is Zeus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#terminology">Terminology</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#run-a-development-server">Run a Development Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#make-a-change">Make a Change</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#verify-the-change">Verify the Change</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#context">Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#keys">Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#primitive-types">Primitive Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#complex-types">Complex Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#type-casting">Type Casting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">References</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#prior-art">Prior Art</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#supporting-technology">Supporting Technology</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="about">
+<h1>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h1>
+<p>Zeus is a configuration compiler. The goal is to provide a single configuration
+across multiple tiers while providing highly performant and scalable accessors
+in native programming languages.</p>
+</div>
+<div class="section" id="build-status">
+<h1>Build Status<a class="headerlink" href="#build-status" title="Permalink to this headline">¶</a></h1>
+<img src="https://travis-ci.org/yahoo/zeus.svg" /></div>
+<div class="section" id="source-formats">
+<h1>Source Formats<a class="headerlink" href="#source-formats" title="Permalink to this headline">¶</a></h1>
+<p>Currently only YAML input formats are supported.</p>
+</div>
+<div class="section" id="target-formats">
+<h1>Target Formats<a class="headerlink" href="#target-formats" title="Permalink to this headline">¶</a></h1>
+<dl class="docutils">
+<dt>Currently, the following languages are supported:</dt>
+<dd><ul class="first last simple">
+<li>C++</li>
+<li>Json (through C++)</li>
+<li>Java</li>
+<li>JavaScript</li>
+<li>PHP</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="build-dependencies">
+<h1>Build Dependencies<a class="headerlink" href="#build-dependencies" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><ul class="simple">
+<li>C++ compiler with C++11 support
+- gcc &gt;= 4.8
+- clang &gt;= 3.3</li>
+<li>boost &gt;= 1.49</li>
+<li>cmake</li>
+<li><a class="reference external" href="https://github.com/jbeder/yaml-cpp">yamlcpp</a> (already a submodule)</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="example">
+<h1>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h1>
+<p>Given the following input configuration:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">dimensions</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">lang</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
+  <span class="l-Scalar-Plain">date_format</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">YYYY.MM.DD</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">lang</span><span class="p-Indicator">:</span> <span class="nv">en-US</span> <span class="p-Indicator">}</span>
+  <span class="l-Scalar-Plain">date_format</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">MM-DD-YYYY</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">lang</span><span class="p-Indicator">:</span> <span class="nv">pt-BR</span> <span class="p-Indicator">}</span>
+  <span class="l-Scalar-Plain">date_format</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">DD/MM/YYYY</span>
+</pre></div>
+</div>
+<p>The following JavaScript code will be generated:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">date_format</span><span class="p">()</span> <span class="p">{</span>
+   <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lang</span><span class="p">)</span> <span class="p">{</span>
+   <span class="k">case</span> <span class="nx">en_US</span><span class="o">:</span>
+      <span class="k">return</span> <span class="s2">&quot;MM-DD-YYYY&quot;</span><span class="p">;</span>
+   <span class="k">case</span> <span class="nx">pt_BR</span><span class="o">:</span>
+      <span class="k">return</span> <span class="s2">&quot;DD/MM/YYYY&quot;</span><span class="p">;</span>
+   <span class="k">default</span><span class="o">:</span>
+      <span class="k">return</span> <span class="s2">&quot;YYYY.MM.DD&quot;</span><span class="p">;</span>
+   <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="compiler-design">
+<h1>Compiler Design<a class="headerlink" href="#compiler-design" title="Permalink to this headline">¶</a></h1>
+<img alt="_images/compiler-arch.png" src="_images/compiler-arch.png" />
+</div>
+<div class="section" id="contributors">
+<h1>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><ul class="simple">
+<li>Daniel Morilha</li>
+<li>Benedicto Franco Jr.</li>
+<li>Marco Aurelio Carvalho</li>
+<li>Scott Beardsley</li>
+<li>Rodrigo Setti</li>
+<li>Wooseok Jeong</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="license">
+<h1>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h1>
+<p>Code licensed under the BSD license. See <a class="reference external" href="https://github.com/yahoo/zeus/blob/master/LICENSE">LICENSE</a> file for terms.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to Zeus&#8217;s documentation!</a></li>
+<li><a class="reference internal" href="#about">About</a></li>
+<li><a class="reference internal" href="#build-status">Build Status</a></li>
+<li><a class="reference internal" href="#source-formats">Source Formats</a></li>
+<li><a class="reference internal" href="#target-formats">Target Formats</a></li>
+<li><a class="reference internal" href="#build-dependencies">Build Dependencies</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#compiler-design">Compiler Design</a></li>
+<li><a class="reference internal" href="#contributors">Contributors</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="overview.html" title="next chapter">Overview</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Yahoo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/index.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,24 @@
+digraph g {
+        rankdir=TB;
+        graph [fontname="helvetica"];
+        node [fontname = "helvetica", shape = "box", color = "black"];
+        edge [fontname = "helvetica", dir=forward];
+        internal [label="internal=? [greeting=hello]"];
+        internal_no [label="region=? [greeting=hello]"];
+        internal_yes [label="region=? [greeting=hello <user>]"];
+        internal_no_region_US [label="[greeting=hello]"];
+        internal_no_region_MX [label="[greeting=¡Hola!]"];
+        internal_yes_region_US [label="[greeting=hello <user>]"];
+        internal_yes_region_MX [label="[greeting=¡Hola!]"];
+        subgraph internal {
+                edge [color = "#CCCCCC"];
+                internal -> internal_no [label="no", penwidth=1];
+                internal -> internal_yes [label="yes", penwidth=1];
+                internal_no -> internal_no_region_US [label="US", penwidth=1];
+                internal_no -> internal_no_region_MX [label="MX", penwidth=1];
+                internal_yes -> internal_yes_region_US [label="US", penwidth=1];
+                internal_yes -> internal_yes_region_MX [label="MX", penwidth=1];
+        }
+        {rank=same; internal}
+        {rank=same; internal_no internal_yes}
+}

@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Overview &mdash; Zeus 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Zeus 1.0 documentation" href="index.html" />
+    <link rel="next" title="Getting Started" href="getting_started.html" />
+    <link rel="prev" title="Welcome to Zeus’s documentation!" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="what-is-zeus">
+<h2>What is Zeus<a class="headerlink" href="#what-is-zeus" title="Permalink to this headline">¶</a></h2>
+<p>Zeus is primarily a configuration compiler. The goals is to provide performant, scalable, and
+developer-friendly APIs for configuration data. There are also tools to turn Zeus into a
+REST API.</p>
+</div>
+<div class="section" id="terminology">
+<h2>Terminology<a class="headerlink" href="#terminology" title="Permalink to this headline">¶</a></h2>
+<p>Here is a common set of terms that are used throughout this document:</p>
+<ul class="simple">
+<li><strong>JSON</strong> - a commonly used data interchange format. Here is the <a class="reference external" href="http://json.org/">JSON spec</a> and there is also an <a class="reference external" href="http://jsoneditoronline.org/">online JSON editor</a></li>
+<li><strong>YAML</strong> - a superset of JSON which is easier for humans to generate. Here is the latest <a class="reference external" href="http://www.yaml.org/spec/1.2/spec.html">YAML 1.2 spec</a> and there is also an <a class="reference external" href="http://yaml-online-parser.appspot.com/">online YAML editor</a></li>
+<li><strong>Source Config</strong> - raw YAML-based configuration for example <a class="reference external" href="https://github.com/yahoo/zeus/tree/master/conf">these files</a></li>
+<li><strong>Compiled Config</strong> - the output of the component job, typically in the form of native code</li>
+<li><strong>Config Version</strong> - a build-time version of the compiled configuration, currently a UNIX epoch timestamp</li>
+<li><strong>Config Context</strong> - also known as the config dimensions, a set of key/value pairs which describes the request</li>
+<li><strong>Config Keys</strong> - statically typed variables which vary on the config context</li>
+<li><strong>Config Regular Expressions</strong> - regexes can be defined to match configuration values</li>
+<li><strong>Config Sets</strong> - lists (or sets) can be defined to match configuration values</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Overview</a><ul>
+<li><a class="reference internal" href="#what-is-zeus">What is Zeus</a></li>
+<li><a class="reference internal" href="#terminology">Terminology</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Zeus&#8217;s documentation!</a></li>
+      <li>Next: <a href="getting_started.html" title="next chapter">Getting Started</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/overview.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Yahoo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/overview.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Concepts &mdash; Zeus 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Zeus 1.0 documentation" href="index.html" />
+    <link rel="next" title="References" href="reference.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="concepts">
+<h1>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="context">
+<h2>Context<a class="headerlink" href="#context" title="Permalink to this headline">¶</a></h2>
+<p>The context is the dimension map for the given set of keys. The default context
+is known as the &#8220;master&#8221; context. All keys must be listed in the &#8220;master&#8221; context.
+Contexts have an order associated with them so that conflicts can be resolved by
+the configuration compiler. The following is an example showing dimension
+priority:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">dimensions</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">internal</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">region</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
+  <span class="l-Scalar-Plain">greeting</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hello</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">internal</span><span class="p-Indicator">:</span> <span class="nv">yes</span> <span class="p-Indicator">}</span>
+  <span class="l-Scalar-Plain">greeting</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hello &lt;user&gt;</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">region</span><span class="p-Indicator">:</span> <span class="nv">MX</span> <span class="p-Indicator">}</span>
+  <span class="l-Scalar-Plain">greeting</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">¡Hola!</span>
+</pre></div>
+</div>
+<p>In the above example the decision tree looks like this:</p>
+<img alt="_images/context.png" src="_images/context.png" />
+</div>
+<div class="section" id="keys">
+<h2>Keys<a class="headerlink" href="#keys" title="Permalink to this headline">¶</a></h2>
+<p>Keys (aka settings or properties) are main interface to a configuration and is the
+set of keys it defines values for. This set of keys is well-defined, and the code
+using the configuration can expect all keys to be defined for any given request.
+As such, we declare the keys available from a given configuration along with its
+base value to use if it isn&#8217;t set for a particular request context.</p>
+<p>All keys must be assigned a type and default value and must exist in the &#8220;master&#8221;
+context. Here is an example:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
+  <span class="l-Scalar-Plain">greeting</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hello world</span>
+  <span class="l-Scalar-Plain">num_ads</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">product</span><span class="p-Indicator">:</span> <span class="nv">search</span> <span class="p-Indicator">}</span>
+  <span class="l-Scalar-Plain">num_ads</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">4</span>
+</pre></div>
+</div>
+<p>In the above example the key types and default values are defined as:</p>
+<blockquote>
+<div><ul class="simple">
+<li>greeting
+- Type: string
+- Default Value: &#8220;hello world&#8221;</li>
+<li>num_ads
+- Type: integer
+- Default Value: 5</li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Once defined in the &#8220;master&#8221; context a key&#8217;s type cannot be modified</p>
+</div>
+</div>
+<div class="section" id="primitive-types">
+<h2>Primitive Types<a class="headerlink" href="#primitive-types" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="string">
+<h3>string<a class="headerlink" href="#string" title="Permalink to this headline">¶</a></h3>
+<p>String keys represent a sequence of zero or more unicode characters. This type is
+typically bound to the string or character pointer type depending on the language.
+The following is an example of a configuration using strings:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
+  <span class="l-Scalar-Plain">greeting</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hello world</span>
+  <span class="l-Scalar-Plain">is_string</span><span class="p-Indicator">:</span> <span class="kt">!!str</span> <span class="l-Scalar-Plain">1</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">region</span><span class="p-Indicator">:</span> <span class="nv">australia</span> <span class="p-Indicator">}</span>
+  <span class="l-Scalar-Plain">greeting</span><span class="p-Indicator">:</span> <span class="s">&quot;Cheers!</span><span class="nv"> </span><span class="s">🍺&quot;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">the &#8221;!!str&#8221; tag denotes the value is a string</p>
+</div>
+</div>
+<div class="section" id="integer">
+<h3>integer<a class="headerlink" href="#integer" title="Permalink to this headline">¶</a></h3>
+<p>Integer keys represent a whole number. When values are not integers but they are
+cast using the &#8221;!!int&#8221; tag the value will be converted at runtime.
+The following is an example of a configuration using integers:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
+  <span class="l-Scalar-Plain">num_ads</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">2</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">product</span><span class="p-Indicator">:</span> <span class="nv">search</span> <span class="p-Indicator">}</span>
+  <span class="l-Scalar-Plain">num_ads</span><span class="p-Indicator">:</span> <span class="kt">!!int</span> <span class="l-Scalar-Plain">4.1</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">the &#8221;!!int&#8221; tag denotes the value is an integer</p>
+</div>
+</div>
+<div class="section" id="boolean">
+<h3>boolean<a class="headerlink" href="#boolean" title="Permalink to this headline">¶</a></h3>
+<p>Boolean keys represent a true/false value. The following values are mapped to &#8220;true&#8221;
+and &#8220;false&#8221; respectively:</p>
+<blockquote>
+<div><ul class="simple">
+<li>true
+- true
+- 1
+- yes</li>
+<li>false
+- false
+- 0
+- no</li>
+</ul>
+</div></blockquote>
+<p>Here are a few examples:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
+  <span class="l-Scalar-Plain">show_ads</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">no</span>
+  <span class="l-Scalar-Plain">is_internal</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+  <span class="l-Scalar-Plain">is_boolean</span><span class="p-Indicator">:</span> <span class="kt">!!bool</span> <span class="l-Scalar-Plain">1</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">the &#8221;!!bool&#8221; tag denotes the value is a boolean</p>
+</div>
+</div>
+<div class="section" id="sequence">
+<h3>sequence<a class="headerlink" href="#sequence" title="Permalink to this headline">¶</a></h3>
+<p>Sequences (aka arrays or lists) represents a collection indexed by sequential
+integers starting with zero. Care must be taken to insure that the type of the list&#8217;s
+values is maintained throughout all items. The contextual override behavior is to push
+new elements to the back of the list. The following is an example of a
+configuration using sequences:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
+  <span class="l-Scalar-Plain">positions</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">ov-top</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">ov-bot</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">ov-east</span>
+  <span class="l-Scalar-Plain">primes</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="nv">1</span><span class="p-Indicator">,</span><span class="nv">2</span><span class="p-Indicator">,</span><span class="nv">3</span><span class="p-Indicator">,</span><span class="nv">5</span><span class="p-Indicator">,</span><span class="nv">7</span><span class="p-Indicator">,</span><span class="nv">11</span><span class="p-Indicator">,</span><span class="nv">13</span><span class="p-Indicator">]</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">tier</span><span class="p-Indicator">:</span> <span class="nv">FE</span> <span class="p-Indicator">}</span>
+  <span class="c1"># The following appends ov-west to the end</span>
+  <span class="l-Scalar-Plain">positions</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">ov-west</span>
+  <span class="c1"># The following will cause a compilation failure</span>
+  <span class="c1"># since there is a type mismatch for the sequence</span>
+  <span class="l-Scalar-Plain">primes</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">seventeen</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">the &#8221;!!seq&#8221; tag denotes the value is a sequence</p>
+</div>
+</div>
+<div class="section" id="mapping">
+<h3>mapping<a class="headerlink" href="#mapping" title="Permalink to this headline">¶</a></h3>
+<p>Mappings (aka maps) represent an associative container, where each key is unique in
+the association and mapped to exactly one value. Depending on the language these may
+be converted into Hash Maps or Classes. Contexual override behavior requires the
+same structure and type. The following is an example of a configuration using
+mappings with a contextual override:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
+  <span class="l-Scalar-Plain">a_mapping</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">date</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">format</span><span class="p-Indicator">:</span> <span class="s">&#39;mm/dd/yyyy&#39;</span>
+      <span class="l-Scalar-Plain">show_epoch</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+  <span class="l-Scalar-Plain">another_mapping</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">foo { bar</span><span class="p-Indicator">:</span> <span class="s">&#39;hello</span><span class="nv"> </span><span class="s">world&#39;</span> <span class="l-Scalar-Plain">)</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">tier</span><span class="p-Indicator">:</span> <span class="nv">FE</span> <span class="p-Indicator">}</span>
+  <span class="c1"># notice the structure of the following matches</span>
+  <span class="c1"># the master context</span>
+  <span class="l-Scalar-Plain">another_mapping</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">foo { bar</span><span class="p-Indicator">:</span> <span class="s">&#39;baz&#39;</span> <span class="l-Scalar-Plain">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">the &#8221;!!map&#8221; tag denotes the value is a mapping</p>
+</div>
+</div>
+</div>
+<div class="section" id="complex-types">
+<h2>Complex Types<a class="headerlink" href="#complex-types" title="Permalink to this headline">¶</a></h2>
+<p>In cases where the type can not be intuited there is a need to explicitly define the
+type. These are known as complex types. There are currently three complex types:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Hash Maps</li>
+<li>Regular Expressions</li>
+<li>Sets</li>
+</ul>
+</div></blockquote>
+<p>To instruct the compiler that a value is of a specific complex type you must
+provide a &#8216;!name&#8217; directive before the value appears. In the case of dynamic the
+prefix must be &#8216;!!dynamic&#8217;.</p>
+<p>Here is a simple example:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">regular-expressions</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">color</span><span class="p-Indicator">:</span> <span class="s">&#39;#[0-9a-fA-F]{3}&#39;</span>
+
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
+  <span class="l-Scalar-Plain">bgcolor</span><span class="p-Indicator">:</span> <span class="kt">!color</span> <span class="s">&#39;#fff&#39;</span>
+</pre></div>
+</div>
+<p>In this case the above type of bgcolor is &#8216;color&#8217; which can be either a set or a
+regular expression.</p>
+<p>This typing allows built-in validation for configurations and removed the need for
+additional &#8216;unit&#8217; testing.</p>
+<div class="section" id="hash-maps">
+<h3>Hash Maps<a class="headerlink" href="#hash-maps" title="Permalink to this headline">¶</a></h3>
+<p>Key values can be forced to match a hash map type where the hash map contains
+a specific type. For example, all hash map values must be an integer or a string.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
+  <span class="l-Scalar-Plain">query_parameters</span><span class="p-Indicator">:</span> <span class="kt">!!dynamic</span>
+    <span class="l-Scalar-Plain">fr</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">sfp</span>
+    <span class="l-Scalar-Plain">fr2</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">offsite</span>
+    <span class="l-Scalar-Plain">n</span><span class="p-Indicator">:</span> <span class="s">&quot;10&quot;</span>
+</pre></div>
+</div>
+<p>In the above example, the query_parameters hash map contains a number of query
+parameters. Notice the type of each must be the same. This list can then be
+extended to include additional parameters.</p>
+<p>The following example overrides the previous defined key &#8216;n&#8217; with value &#8216;12&#8217; and adds a new key &#8216;o&#8217; with value set to &#8216;10&#8217;</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">language</span><span class="p-Indicator">:</span> <span class="nv">en-US</span> <span class="p-Indicator">}</span>
+  <span class="l-Scalar-Plain">query_parameters</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">n</span><span class="p-Indicator">:</span> <span class="s">&quot;12&quot;</span>
+    <span class="l-Scalar-Plain">o</span><span class="p-Indicator">:</span> <span class="s">&quot;10&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="regular-expressions">
+<h3>Regular Expressions<a class="headerlink" href="#regular-expressions" title="Permalink to this headline">¶</a></h3>
+<p>Key values can be forced to match a given regular expression. This is useful for
+preventing invalid configurations from reaching production. Each regular expression
+has a name which can be activated using the complex &#8221;!name&#8221; tag format.</p>
+<p>Here is an example:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">regular-expressions</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">color</span><span class="p-Indicator">:</span> <span class="s">&#39;#([0-9a-fA-F]{3}){1,2}|blue|cyan|gray|green|orange|purple|red|yellow|cream&#39;</span>
+</pre></div>
+</div>
+<p>Then you can assign a color using the following:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
+  <span class="l-Scalar-Plain">bgcolor</span><span class="p-Indicator">:</span> <span class="kt">!color</span> <span class="s">&#39;#fff&#39;</span>
+  <span class="l-Scalar-Plain">fgcolor</span><span class="p-Indicator">:</span> <span class="kt">!color</span> <span class="l-Scalar-Plain">blue</span>
+</pre></div>
+</div>
+<p>When there is a failure to match a given regex for a specific value, like this:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
+  <span class="l-Scalar-Plain">bgcolor</span><span class="p-Indicator">:</span> <span class="kt">!color</span> <span class="s">&#39;#ffg&#39;</span>
+  <span class="l-Scalar-Plain">fgcolor</span><span class="p-Indicator">:</span> <span class="kt">!color</span> <span class="l-Scalar-Plain">blue</span>
+</pre></div>
+</div>
+<p>you will see the following error at build time:</p>
+<div class="highlight-shell"><div class="highlight"><pre>content <span class="s2">&quot;#ffg&quot;</span> did not match regular expression <span class="s2">&quot;color&quot;</span>
+</pre></div>
+</div>
+<p>Regular expressions referenced into master settings, are also implicitly applied to overriden values. For example:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">language</span><span class="p-Indicator">:</span> <span class="nv">en-US</span> <span class="p-Indicator">}</span>
+  <span class="l-Scalar-Plain">bgcolor</span><span class="p-Indicator">:</span> <span class="s">&#39;#ffg&#39;</span>
+</pre></div>
+</div>
+<p>Produces the same error at build time:</p>
+<div class="highlight-shell"><div class="highlight"><pre>content <span class="s2">&quot;#ffg&quot;</span> did not match regular expression <span class="s2">&quot;color&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sets">
+<h3>Sets<a class="headerlink" href="#sets" title="Permalink to this headline">¶</a></h3>
+<p>Key values can be forced to match a value from a list of values. This is useful for
+preventing invalid configurations from reaching production. Each set
+has a name which can be activated using the complex &#8221;!name&#8221; tag format.</p>
+<p>Here is an example:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">sets</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">ad_position</span><span class="p-Indicator">:</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">north</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">south</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">east</span>
+    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">west</span>
+</pre></div>
+</div>
+<p>Then you can assign a color using the following:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="p-Indicator">-</span> <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">master</span>
+  <span class="l-Scalar-Plain">top_ad_position</span><span class="p-Indicator">:</span> <span class="kt">!ad_position</span> <span class="l-Scalar-Plain">north</span>
+  <span class="l-Scalar-Plain">bottom_ad_position</span><span class="p-Indicator">:</span> <span class="kt">!ad_position</span> <span class="l-Scalar-Plain">south</span>
+  <span class="l-Scalar-Plain">right_ad_position</span><span class="p-Indicator">:</span>  <span class="kt">!ad_position</span> <span class="l-Scalar-Plain">east</span>
+  <span class="l-Scalar-Plain">left_ad_position</span><span class="p-Indicator">:</span>  <span class="kt">!ad_position</span> <span class="l-Scalar-Plain">west</span>
+</pre></div>
+</div>
+<p>When there is a failure to match a given regex for a specific value, like this:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+  <span class="l-Scalar-Plain">top_ad_position</span><span class="p-Indicator">:</span> <span class="kt">!ad_position</span> <span class="l-Scalar-Plain">upper-deck</span>
+</pre></div>
+</div>
+<p>you will see the following error at build time:</p>
+<div class="highlight-shell"><div class="highlight"><pre>content <span class="s2">&quot;upper-deck&quot;</span> did not match <span class="nb">set</span> <span class="s2">&quot;ad_position&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="type-casting">
+<h2>Type Casting<a class="headerlink" href="#type-casting" title="Permalink to this headline">¶</a></h2>
+<p>In some cases there might be a desire to override the type of a key. For example, if
+you have a number that you would like to store as a string instead. Here are some
+examples of type casting:</p>
+<div class="highlight-yaml"><div class="highlight"><pre>---
+- context: master
+  an_int: !!int 1.2
+  a_boolean: !!bool yes
+  a_float: !!float 1
+  a_mapping: !!map date { format: &#39;mm/dd/yyyy&#39;, show_epoch: 1 }
+  a_null: !!null NULL
+  a_sequence: !!seq [1,2,3]
+  a_string: !!str 1
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Since a key&#8217;s type must be maintained throughout all contexts, the type must
+be defined in the master dimension.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Concepts</a><ul>
+<li><a class="reference internal" href="#context">Context</a></li>
+<li><a class="reference internal" href="#keys">Keys</a></li>
+<li><a class="reference internal" href="#primitive-types">Primitive Types</a><ul>
+<li><a class="reference internal" href="#string">string</a></li>
+<li><a class="reference internal" href="#integer">integer</a></li>
+<li><a class="reference internal" href="#boolean">boolean</a></li>
+<li><a class="reference internal" href="#sequence">sequence</a></li>
+<li><a class="reference internal" href="#mapping">mapping</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#complex-types">Complex Types</a><ul>
+<li><a class="reference internal" href="#hash-maps">Hash Maps</a></li>
+<li><a class="reference internal" href="#regular-expressions">Regular Expressions</a></li>
+<li><a class="reference internal" href="#sets">Sets</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#type-casting">Type Casting</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="getting_started.html" title="previous chapter">Getting Started</a></li>
+      <li>Next: <a href="reference.html" title="next chapter">References</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/concepts.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Yahoo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/concepts.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
