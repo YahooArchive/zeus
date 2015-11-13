@@ -29,7 +29,6 @@ void GraphTypeExtractor::extract(Key & k, StructureTable & s) const {
   k.kind = kind(value);
 }
 
-//TODO(dmorilha): eventually walk the value tree
 Structure::ID GraphTypeExtractor::processValue(Value & v,
     StructureTable & s) const {
   Structure structure;
