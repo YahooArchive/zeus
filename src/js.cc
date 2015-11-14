@@ -11,7 +11,9 @@
 #include "js.h"
 
 void JSGenerator::structure (Printer & p, const ir::Structure & structure) {
-  p << tab(1) << "function " << identifier(structure.identifier) << "() {" << "\n";
+  const std::string id = identifier(structure.identifier);
+
+  p << tab(1) << "function " << id << "() {" << "\n";
 
   {
     ir::Structure::Properties properties = structure.properties;
@@ -58,10 +60,14 @@ void JSGenerator::structure (Printer & p, const ir::Structure & structure) {
 
     p << tab(1) << "}" << "\n"
       << "\n"
-      << tab(1) << identifier(structure.identifier)
-      << ".prototype = ConfigurationStructure;" << "\n"
-      << "\n";
+      << tab(1) << id
+      << ".prototype = ConfigurationStructure;" << "\n";
 
+    for (const auto & item : structure.aliases) {
+      p << tab(1) << "var " << item << " = " << id << ";" << "\n";
+    }
+
+    p << "\n";
   }
 }
 
@@ -205,6 +211,8 @@ void JSGenerator::key(Printer & p, const ir::Key & key) {
     p << tab(3) << "value = [];" << "\n";
   } else if (key.value.type == Type::kDynamic) {
     p << tab(3) << "value = {};" << "\n";
+  } else if ( ! key.alias.empty()) {
+    p << tab(3) << "value = new " << key.alias << "();" << "\n";
   } else if ( ! nativeType(key.type)) {
     p << tab(3) << "value = new " << key.type << "();" << "\n";
   }

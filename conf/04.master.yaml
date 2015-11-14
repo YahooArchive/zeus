@@ -5,14 +5,14 @@
 ---
 - settings: master
 
-  provider:
+  provider: !Provider
     host:
       - !recolor gray
     path: x
     port: 1
     shouldRun: off
     timeout: 10
-    clas:
+    clas: !Clas
       name: brown
       address: x
     parameters: !!dynamic

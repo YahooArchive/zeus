@@ -10,8 +10,10 @@
 
 #include "php.h"
 
-void PHPGenerator::structure (Printer & p, const ir::Structure & structure) {
-  p << "class " << identifier(structure.identifier) << " extends ConfigurationStructure {" << "\n";
+void PHPGenerator::structure (Printer & p, const ir::Structure & structure, const ir::Namespaces & n) {
+  const std::string id = identifier(structure.identifier);
+
+  p << "class " << id << " extends ConfigurationStructure {" << "\n";
 
   ir::Structure::Properties properties = structure.properties;
   std::sort(std::begin(properties), std::end(properties));
@@ -63,6 +65,18 @@ void PHPGenerator::structure (Printer & p, const ir::Structure & structure) {
   p << tab(1) << "}" << "\n"
     << "}" << "\n"
     << "\n";
+
+  if ( ! structure.aliases.empty()) {
+    std::string ns;
+    for (const auto & item : n) {
+      ns += item + "\\";
+    }
+    for (const auto & item : structure.aliases) {
+      p << "class_alias('" << ns << id << "', '"
+        << ns << item << "');" << "\n";
+    }
+    p << "\n";
+  }
 }
 
 void PHPGenerator::content(Printer & p, const Type::TYPES t,
@@ -208,6 +222,9 @@ void PHPGenerator::key(Printer & p, const ir::Key & key) {
   if (key.value.type == Type::kArray
       || key.value.type == Type::kDynamic) {
     p << tab(2) << "$value = array();" << "\n";
+  } else if ( ! key.alias.empty()) {
+    p << tab(2) << "$value" << " = new " << key.alias
+      << "()" << ";" << "\n";
   } else if ( ! nativeType(key.type)) {
     p << tab(2) << "$value" << " = new " << key.type
       << "()" << ";" << "\n";
@@ -329,7 +346,7 @@ void PHPGenerator::generate(Printer & p, const ir::Snapshot & snapshot) {
         << "\n";
 
       for (const auto & item : structures) {
-        structure(p, item);
+        structure(p, item, snapshot.namespaces);
       }
     }
   }

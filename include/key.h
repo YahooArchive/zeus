@@ -21,6 +21,7 @@ struct Key {
   Graph::vertex_descriptor root_;
   Structure::ID type;
   ir::Kind kind;
+  Structure::Alias alias;
 
   Key(void): graph(1), root_(*boost::vertices(graph).first),
     type(StructureTable::kUndefined),

@@ -121,3 +121,28 @@ std::string StructureTable::getTypeName(const Structure::ID s) const {
     return iterator->second->getName();
   }
 }
+
+StructureTable::Entry * StructureTable::operator [] (const Structure::Alias & a) {
+  const auto iterator = aliases.find(a);
+  return iterator != std::end(aliases) ? iterator->second : nullptr;
+}
+
+bool StructureTable::alias(const Structure::ID i, const Structure::Alias & a) {
+  Entry * const entry = (*this)[i];
+
+  /*
+   * if type does not exist or alias was already used
+   */
+  if (entry == nullptr || (*this)[a] != nullptr) {
+    return false;
+  }
+
+  assert(std::find(std::begin(entry->structure.aliases), std::end(entry->structure.aliases), a)
+      == std::end(entry->structure.aliases));
+
+  entry->structure.aliases.emplace_back(a);
+  aliases[a] = entry;
+
+  return true;
+}
+

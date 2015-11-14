@@ -26,10 +26,18 @@ void CPPHeaderGenerator::structure (Printer & p, const ir::Structure & structure
     << tab(1) << id << "(void);" << "\n"
     << "};" << "\n"
     << "\n";
+
+  if ( ! structure.aliases.empty()) {
+    for (const auto & item : structure.aliases) {
+      p << "typedef " << id << " " << item << ";" << "\n";
+    }
+    p << "\n";
+  }
 }
 
 void CPPHeaderGenerator::key(Printer & p, const ir::Key & key) {
-  const std::string type = this->type(key.type, key.kind);
+  const std::string type = this->type(
+      key.alias.empty() ? key.type : key.alias, key.kind);
   p << tab(1) << type << " " << key.key << "(void) const;" << "\n";
 }
 

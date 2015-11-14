@@ -22,6 +22,6 @@ void StructureWriter::operator () (const StructureTable & t, ir::Structures & s)
       properties.emplace_back(property);
     }
 
-    s.emplace_back(entry.getName(), properties);
+    s.emplace_back(entry.getName(), properties, entry.structure.aliases);
   }
 }

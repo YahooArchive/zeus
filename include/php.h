@@ -13,7 +13,7 @@
 struct PHPGenerator : public Generator {
   void header(Printer &, const ir::Namespaces &);
 
-  void structure(Printer &, const ir::Structure &);
+  void structure(Printer &, const ir::Structure &, const ir::Namespaces &);
 
   void dimension(Printer &, const ir::DimensionEnumeration &);
 
