@@ -1,5 +1,6 @@
-Welcome to Zeus's documentation!
-================================
+==================
+Zeus documentation
+==================
 
 .. toctree::
    :maxdepth: 2
