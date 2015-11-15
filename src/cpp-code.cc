@@ -175,6 +175,8 @@ void CPPCodeGenerator::keyDimension(Printer & p, const ir::Key & key,
       keyDimension(p, key, *dimension.next, dimensions, t + 1);
       p << tab(t + 1) << "break;" << "\n";
     }
+  } else {
+    p << tab(t) << "default: break;" << "\n";
   }
 
   if ( ! (dimension.skip || dimension.values.empty())) {
