@@ -186,7 +186,8 @@ void CPPCodeGenerator::keyDimension(Printer & p, const ir::Key & key,
 
 void CPPCodeGenerator::key(Printer & p, const ir::Key & key,
     const ir::Dimensions & dimensions) {
-  const std::string type = this->type(key.type, key.kind);
+  const std::string type = this->type(
+      key.alias.empty() ? key.type : key.alias, key.kind);
 
   p << type << " Configuration::" << key.key << "(void) const {" << "\n";
 

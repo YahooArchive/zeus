@@ -35,7 +35,8 @@ ir::Key::Key(const ir::Key & k) :
   value(k.value),
   type(k.type),
   cache(k.cache),
-  kind(k.kind) {
+  kind(k.kind),
+  alias(k.alias) {
 
   if (static_cast< bool >(k.dimension)) {
     dimension.reset(new ir::Dimension(*k.dimension));

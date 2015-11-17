@@ -100,6 +100,7 @@ namespace ir {
     DimensionPointer dimension;
     bool cache;
     Kind kind;
+    std::string alias;
 
     template < class T1, class T2, class T3 >
     Key(T1 && k, T2 && v, T3 && t, DimensionPointer && d) :
@@ -157,22 +158,25 @@ namespace ir {
     };
 
     typedef std::vector< Property > Properties;
+    typedef std::vector< std::string > Aliases;
 
     std::string identifier;
     Properties properties;
+    Aliases aliases;
 
-    template < class T1, class T2 >
-    Structure(T1 &&, T2 &&);
+    template < class T1, class T2, class T3 >
+    Structure(T1 &&, T2 &&, T3 &&);
 
     bool operator < (const Structure &) const;
   };
 
   typedef std::vector< Structure > Structures;
 
-  template < class T1, class T2 >
-  Structure::Structure(T1 && t, T2 && p) :
+  template < class T1, class T2, class T3 >
+  Structure::Structure(T1 && t, T2 && p, T3 && a) :
     identifier(std::forward< T1 >(t)),
-    properties(std::forward< T2 >(p)) { }
+    properties(std::forward< T2 >(p)),
+    aliases(std::forward< T3 >(a)) { }
 
   typedef std::vector< std::string > Namespaces;
 

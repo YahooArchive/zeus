@@ -120,9 +120,10 @@ int main(int argc, char * * argv) {
         builder.build(item.first, graph, r.dimensions));
 
       {
-        ir::Key & key2 = snapshot.keys.back();
-        key2.kind = key.kind;
-        key2.type = structures.getTypeName(key.type);
+        ir::Key & irKey = snapshot.keys.back();
+        irKey.kind = key.kind;
+        irKey.type = structures.getTypeName(key.type);
+        irKey.alias = key.alias;
       }
     }
 

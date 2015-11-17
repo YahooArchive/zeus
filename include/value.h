@@ -67,6 +67,7 @@ struct Value {
   Properties properties;
   Regex regex;
   Set set_;
+  std::string alias;
 
   Value(void): type(Type::kUndefined), reset(false) { }
 

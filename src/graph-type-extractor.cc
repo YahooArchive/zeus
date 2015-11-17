@@ -4,6 +4,7 @@
  * See the accompanying LICENSE file for terms.
  */
 
+#include <assert.h>
 #include <iostream>
 #include "graph-type-extractor.h"
 #include "structure.h"
@@ -26,10 +27,11 @@ ir::Kind GraphTypeExtractor::kind(const Value & v) const {
 void GraphTypeExtractor::extract(Key & k, StructureTable & s) const {
   Value & value = k.root();
   k.type = processValue(value, s);
+  assert(value.alias.empty() || s[value.alias] != nullptr);
+  k.alias = value.alias;
   k.kind = kind(value);
 }
 
-//TODO(dmorilha): eventually walk the value tree
 Structure::ID GraphTypeExtractor::processValue(Value & v,
     StructureTable & s) const {
   Structure structure;
@@ -82,6 +84,12 @@ Structure::ID GraphTypeExtractor::processValue(Value & v,
       }
       const StructureTable::Entry & entry = s.insert(structure);
       v.content = entry.getName();
+      if ( ! v.alias.empty()) {
+        if ( ! s.alias(entry.sid, v.alias)) {
+          std::cerr << "Alias " << v.alias << " already exists for a different class" << std::endl;
+          assert(false);
+        }
+      }
       return entry.sid;
     }
   case Type::kString:

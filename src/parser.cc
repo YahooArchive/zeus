@@ -176,6 +176,14 @@ void Parser::processValue(const YAML::Node & n, const Result & r, Value & v) con
       bool found = false;
 
       /*
+       * for objects, tags are used as type aliases
+       */
+      if (inferredType == Type::kObject) {
+        v.alias = tag1;
+        found = true;
+      }
+
+      /*
        * TODO(dmorilha): handle collisions. What happens when
        * the same key is used for regular expression and set?
        */

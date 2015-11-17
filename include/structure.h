@@ -15,6 +15,7 @@
 
 struct Structure {
   typedef int ID;
+  typedef std::string Alias;
 
   struct Property {
     ID type;
@@ -34,8 +35,10 @@ struct Structure {
   };
 
   typedef std::set< Property > Properties;
+  typedef std::vector< Alias > Aliases;
 
   Properties properties;
+  Aliases aliases;
 
   std::string canonicalize(void) const;
 
@@ -74,9 +77,11 @@ struct StructureTable {
 
   typedef std::map< std::string, Entry > Entries;
   typedef std::map< Structure::ID, Entry * > Index;
+  typedef std::map< Structure::Alias, Entry * > Aliases;
 
   Entries entries;
   Index index;
+  Aliases aliases;
 
   Structure::ID sid;
 
@@ -84,11 +89,14 @@ struct StructureTable {
 
   Entry & operator [] (const Structure &);
   Entry * operator [] (const Structure::ID);
+  Entry * operator [] (const Structure::Alias &);
 
   Entry & insert(const Structure &);
 
   std::string getStructureName(const Structure::ID) const;
   std::string getTypeName(const Structure::ID) const;
+
+  bool alias(const Structure::ID, const Structure::Alias &);
 };
 
 #endif
