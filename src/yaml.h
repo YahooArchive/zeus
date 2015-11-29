@@ -17,6 +17,7 @@ struct yaml {
     static const std::string Boolean;
     static const std::string Dynamic;
     static const std::string Float;
+    static const std::string Ignore;
     static const std::string Integer;
     static const std::string Map;
     static const std::string Null;

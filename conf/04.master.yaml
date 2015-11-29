@@ -22,8 +22,15 @@
   color: !colors gray
 
   myArray:
+    - !!ignore ignore me
     - hello
     - world
+    - !!ignore also ignore
+
+  myEmptyArray:
+    - !!ignore
+      address: here
+      name: john
 
   myHash: !!dynamic
     key: Hello

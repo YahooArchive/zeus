@@ -13,8 +13,14 @@ OBJS := $(patsubst %.cc, %.o, $(SRC))
 BIN ?= zeus
 
 ENABLE_ASAN ?= false
+
 ifeq ($(ENABLE_ASAN), true)
 	CXXFLAGS += -fsanitize=address
+endif
+
+ENABLE_USAN ?= false
+ifeq ($(ENABLE_USAN), true)
+	CXXFLAGS += -fsanitize=undefined
 endif
 
 .PHONY: all clean run lines

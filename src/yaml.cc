@@ -10,6 +10,7 @@
 const std::string yaml::tag::Boolean = "tag:yaml.org,2002:bool";
 const std::string yaml::tag::Dynamic = "tag:yaml.org,2002:dynamic";
 const std::string yaml::tag::Float = "tag:yaml.org,2002:float";
+const std::string yaml::tag::Ignore = "tag:yaml.org,2002:ignore";
 const std::string yaml::tag::Integer = "tag:yaml.org,2002:int";
 const std::string yaml::tag::Map = "tag:yaml.org,2002:map";
 const std::string yaml::tag::Null = "tag:yaml.org,2002:null";
