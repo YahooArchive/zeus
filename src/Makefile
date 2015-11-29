@@ -7,10 +7,14 @@ YAML_CPP_PATH ?= ../yaml-cpp
 CXXFLAGS += -g --std=c++11 -fPIC
 CXXFLAGS += -I$(YAML_CPP_PATH)/include
 CXXFLAGS += -Wall -Wno-deprecated-declarations
+CXXFLAGS += -MMD
 GDB ?= gdb
 SRC := $(wildcard *.cc)
 OBJS := $(patsubst %.cc, %.o, $(SRC))
 BIN ?= zeus
+DEPS = sh -c 'LIST1=" "; while [[ "$$LIST" != "$$LIST1" ]]; do \
+	LIST="$$LIST1"; LIST1=`sed -n "s/^\#include \"\(.*\)\"$$/\1/p" $$0 $$LIST | sort -u | xargs`; \
+	done; echo $$LIST;'
 
 ENABLE_ASAN ?= false
 ifeq ($(ENABLE_ASAN), true)
@@ -33,10 +37,12 @@ $(YAML_CPP_PATH)/libyaml-cpp.a:
 	$(error Please make sure you have a static library at $@);
 
 $(OBJS) : %.o : %.cc
-	$(CXX) $(CXXFLAGS) -c $^ -o $@;
+	$(CXX) $(CXXFLAGS) -c $< -o $@;
+
+-include *.d
 
 lines:
 	wc -l *.cc *.h;
 
 clean:
-	@rm -fv *.o $(BIN) 
+	@rm -fv *.o $(BIN)

@@ -28,6 +28,9 @@ Makefile.local
 # Fortran module files
 *.mod
 
+#dependencies
+*.d
+
 # Compiled Static libraries
 *.lai
 *.la
