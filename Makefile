@@ -4,13 +4,12 @@
 
 CXX ?= g++
 YAML_CPP_INCLUDE_PATH ?= ./yaml-cpp/include
-CXXFLAGS += -g --std=c++11 -fPIC -Wall -I$(YAML_CPP_INCLUDE_PATH)
+CXXFLAGS += -g --std=c++11 -fPIC -Wall -I$(YAML_CPP_INCLUDE_PATH) -Wno-deprecated-declarations
 ENABLE_ASAN ?= false
 GDB ?= gdb
-CONFIGS := $(shell find conf -name "*.yaml")
-SRC := $(shell find src -name "*.cc")
-OBJS := $(patsubst %.cc, %.o, $(SRC))
+CONFIGS ?= $(wildcard conf/*.yaml)
 OUTDIR := output
+export BIN ?= zeus
 
 ifeq ($(ENABLE_ASAN), true)
 	CXXFLAGS += -fsanitize=address
@@ -20,50 +19,51 @@ endif
 
 -include Makefile.local
 
-all: main $(OUTDIR) $(OUTDIR)/configuration.cc $(OUTDIR)/configuration.h $(OUTDIR)/configuration-json.cc $(OUTDIR)/configuration-json.h $(OUTDIR)/configuration.js $(OUTDIR)/configuration.php
+all: $(OUTDIR)/configuration.cc $(OUTDIR)/configuration.h $(OUTDIR)/configuration-json.cc $(OUTDIR)/configuration-json.h $(OUTDIR)/configuration.js $(OUTDIR)/configuration.php
+
+src/$(BIN):
+src/$(BIN):
+	$(MAKE) -C src $(BIN);
 
 $(OUTDIR):
-	mkdir -p $(OUTDIR)
+	@mkdir -vp $(OUTDIR)
 
-$(OUTDIR)/configuration.cc: main
+$(OUTDIR)/configuration.cc: $(BIN) $(OUTDIR)
 	./$< $(CONFIGS) --cpp-code > $(OUTDIR)/configuration.cc
 
-$(OUTDIR)/configuration.h: main
+$(OUTDIR)/configuration.h: $(BIN) $(OUTDIR)
 	./$< $(CONFIGS) --cpp-header > $(OUTDIR)/configuration.h
 
-$(OUTDIR)/configuration-json.cc: main
+$(OUTDIR)/configuration-json.cc: $(BIN) $(OUTDIR)
 	./$< $(CONFIGS) --cpp-json-code > $(OUTDIR)/configuration-json.cc
 
-$(OUTDIR)/configuration-json.h: main
+$(OUTDIR)/configuration-json.h: $(BIN) $(OUTDIR)
 	./$< $(CONFIGS) --cpp-json-header > $(OUTDIR)/configuration-json.h
 
-$(OUTDIR)/configuration.js: main
+$(OUTDIR)/configuration.js: $(BIN) $(OUTDIR)
 	./$< $(CONFIGS) --js > $(OUTDIR)/configuration.js
 
-$(OUTDIR)/configuration.php: main
+$(OUTDIR)/configuration.php: $(BIN) $(OUTDIR)
 	./$< $(CONFIGS) --php > $(OUTDIR)/configuration.php
 
-$(OBJS): $(SRC)
-	cd src && make
-
-run: main
+run: $(BIN)
 	./$< $(CONFIGS);
 
-gdb: main
+gdb: $(BIN)
 	$(GDB) -ex run -ex quit --args ./$< $(CONFIGS);
 
-lldb: main
+lldb: $(BIN)
 	lldb -s ./lldb -- ./$< $(CONFIGS);
 
-main: $(OBJS) yaml-cpp/libyaml-cpp.a
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@;
+$(BIN): src/$(BIN)
+	@cp -fv $< $@;
 
 test: php js
 
-php: main tests/test1.php $(CONFIGS)
+php: $(BIN) tests/test1.php $(CONFIGS)
 	(./$< --php $(CONFIGS); cat tests/test1.php) | php > /dev/null
 
-js: main tests/test1.js $(CONFIGS)
+js: $(BIN) tests/test1.js $(CONFIGS)
 	(./$< --js $(CONFIGS); cat tests/test1.js) | node > /dev/null
 
 yaml-cpp/include/yaml-cpp/yaml.h yaml-cpp/CMakeLists.txt dep:
@@ -75,9 +75,6 @@ yaml-cpp/Makefile: yaml-cpp/CMakeLists.txt
 yaml-cpp/libyaml-cpp.a: yaml-cpp/Makefile
 	[ -r $@ ] || make -C $(dir $<);
 
-lines:
-	wc -l src/*.cc include/*.h;
-
 clean:
-	@cd src && make clean;
-	@rm -fr main output;
+	@$(MAKE) -C src clean;
+	@rm -vfr $(BIN) output;
