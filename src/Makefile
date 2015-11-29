@@ -29,6 +29,9 @@ run: $(BIN)
 $(BIN): $(OBJS) $(YAML_CPP_PATH)/libyaml-cpp.a
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@;
 
+$(YAML_CPP_PATH)/libyaml-cpp.a:
+	$(error Please make sure you have a static library at $@);
+
 $(OBJS) : %.o : %.cc
 	$(CXX) $(CXXFLAGS) -c $^ -o $@;
 
