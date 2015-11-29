@@ -21,8 +21,7 @@ endif
 
 all: $(OUTDIR)/configuration.cc $(OUTDIR)/configuration.h $(OUTDIR)/configuration-json.cc $(OUTDIR)/configuration-json.h $(OUTDIR)/configuration.js $(OUTDIR)/configuration.php
 
-src/$(BIN):
-src/$(BIN):
+src/$(BIN): yaml-cpp/libyaml-cpp.a
 	$(MAKE) -C src $(BIN);
 
 $(OUTDIR):
