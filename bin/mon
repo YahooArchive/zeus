@@ -6,7 +6,7 @@
 
 #!/bin/sh
 renice -n 20 -p $$;
-ZEUS=${ZEUS:-`([ -x ./main ] && echo './main') || which zeus`};
+ZEUS=${ZEUS:-`([ -x ./zeus ] && echo './zeus') || which zeus`};
 ZEUSSERVER=${ZEUSSERVER:-`([ -x ./zeusserver ] && echo './zeusserver') || which zeusserver`}
 INTERVAL=${INTERVAL:-1}
 FILES="$@";
