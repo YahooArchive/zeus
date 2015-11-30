@@ -176,9 +176,16 @@ void Parser::processValue(const YAML::Node & n, const Result & r, Value & v) con
       bool found = false;
 
       /*
+       * ignore tag, ignores entry
+       */
+      if (tag == yaml::tag::Ignore) {
+        v.ignore = true;
+        found = true;
+
+      /*
        * for objects, tags are used as type aliases
        */
-      if (inferredType == Type::kObject) {
+      } else if (inferredType == Type::kObject) {
         v.alias = tag1;
         found = true;
       }
@@ -213,7 +220,6 @@ void Parser::processValue(const YAML::Node & n, const Result & r, Value & v) con
 
       if (found) {
         v.type = inferredType;
-
         switch (inferredType) {
         case Type::kArray:
           processSequence(n, r, v);
@@ -227,7 +233,6 @@ void Parser::processValue(const YAML::Node & n, const Result & r, Value & v) con
         default:
           break;
         }
-
       } else {
         std::cerr << "unsuported tag: " << tag << std::endl;
         assert(false); //unrecognized type

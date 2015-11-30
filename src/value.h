@@ -68,33 +68,33 @@ struct Value {
   Regex regex;
   Set set_;
   std::string alias;
+  bool ignore;
 
-  Value(void): type(Type::kUndefined), reset(false) { }
+  Value(void): type(Type::kUndefined), reset(false), ignore(false) { }
 
   Value(const Type::TYPES t, const std::string & c, const bool r = false):
-    type(t), reset(r), content(c) { }
+    type(t), reset(r), content(c), ignore(false) { }
 
   Value(const Type::TYPES t, std::string && c, const bool r = false):
-    type(t), reset(r), content(std::move(c)) { }
+    type(t), reset(r), content(std::move(c)), ignore(false) { }
 
   Value(const Type::TYPES t, const Strings & c, const bool r = false):
-    type(Type::kArray), reset(r) { push(c, t); }
+    type(Type::kArray), reset(r), ignore(false) { push(c, t); }
 
   Value(const Type::TYPES t, Strings && c, const bool r = false):
-    type(Type::kArray), reset(r) { push(c, t); }
+    type(Type::kArray), reset(r), ignore(false) { push(c, t); }
 
   Value(const std::string & c, const bool r = false):
-    type(Type::kString), reset(r), content(c) { }
+    type(Type::kString), reset(r), content(c), ignore(false) { }
 
   Value(const char * const c, const bool r = false):
-    type(Type::kString), reset(r),
-    content(c) { }
+    type(Type::kString), reset(r), content(c), ignore(false) { }
 
   Value(std::string && c, const bool r = false):
-    type(Type::kString), reset(r), content(std::move(c)) { }
+    type(Type::kString), reset(r), content(std::move(c)), ignore(false) { }
 
   Value(const Booleans & c, const bool r = false):
-    type(Type::kArray), reset(r) {
+    type(Type::kArray), reset(r), ignore(false) {
     properties.reserve(c.size());
     for (const auto item : c) {
       properties.push_back({"",
@@ -103,33 +103,32 @@ struct Value {
   }
 
   Value(const bool c):
-    type(Type::kBoolean), reset(false),
-    content(c ? "true" : "false") { }
+    type(Type::kBoolean), reset(false), content(c ? "true" : "false"),
+    ignore(false) { }
 
   Value(const Floats &, const bool r = false);
 
   Value(const Integers &, const bool r = false);
 
   Value(const float c):
-    type(Type::kFloat), reset(false),
-    content(std::to_string(c)) { }
+    type(Type::kFloat), reset(false), content(std::to_string(c)),
+    ignore(false) { }
 
   Value(const double c):
-    type(Type::kFloat), reset(false),
-    content(std::to_string(c)) { }
+    type(Type::kFloat), reset(false), content(std::to_string(c)),
+    ignore(false) { }
 
   template < class T >
   Value(const T c):
-    type(Type::kInteger), reset(false),
-    content(std::to_string(c)) { }
+    type(Type::kInteger), reset(false), content(std::to_string(c)),
+    ignore(false) { }
 
   Value(const Value::Properties & p) :
-    type(Type::kUndefined), reset(false),
-    properties(p) { }
+    type(Type::kUndefined), reset(false), properties(p), ignore(false) { }
 
   Value(Properties && p) :
-    type(Type::kUndefined), reset(false),
-    properties(std::move(p)) { }
+    type(Type::kUndefined), reset(false), properties(std::move(p)),
+    ignore(false) { }
 
   Value(const Value &) = default;
   Value(Value &&) = default;

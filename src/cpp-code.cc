@@ -96,16 +96,23 @@ void CPPCodeGenerator::value(Printer & p, const Value & value,
   if ( ! value.properties.empty()) {
     if (value.type == Type::kArray) {
       for (const auto & item : value.properties) {
+        if (item.second.ignore) {
+          continue;
+        }
         p << tab(t) << prefix << ".push_back(";
         content(p, item.second.type, item.second.content);
         p << ");" << "\n";
       }
     } else if (value.type == Type::kObject) {
       for (const auto & item : value.properties) {
+        assert( ! item.second.ignore);
         this->value(p, item.second, prefix + "." + item.first, t);
       }
     } else if (value.type == Type::kDynamic) {
       for (const auto & item : value.properties) {
+        if (item.second.ignore) {
+          continue;
+        }
         const std::string dynamicPrefix = prefix + "[\"" + item.first + "\"]";
         /*
         if (item.second.type == Type::kArray
@@ -124,6 +131,7 @@ void CPPCodeGenerator::value(Printer & p, const Value & value,
     }
   } else if (value.type != Type::kUndefined) {
     assert( ! value.content.empty() || value.type == Type::kString);
+    assert( ! value.ignore);
     p << tab(t) << prefix << " = ";
     content(p, value.type, value.content);
     p << ";" << "\n";
