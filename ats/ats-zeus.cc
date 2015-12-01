@@ -60,7 +60,7 @@ TSReturnCode TSRemapInit(TSRemapInterface *, char *, int) {
   TSPluginRegistrationInfo info;
 
   info.plugin_name = const_cast< char * >(PLUGIN_TAG);
-  info.support_email = const_cast< char * >("search-l7-dev@yahoo-inc.com");
+  info.support_email = const_cast< char * >("zeus-dev@yahoo-inc.com");
   info.vendor_name = const_cast< char * >("Yahoo Inc");
 
   if (TSPluginRegister(TS_SDK_VERSION_3_0, &info) != TS_SUCCESS) {
