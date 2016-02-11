@@ -1,8 +1,10 @@
 #!/bin/env node
 
-# Copyright (c) 2015, Yahoo Inc. All rights reserved.
-# Copyrights licensed under the New BSD License.
-# See the accompanying LICENSE file for terms.
+/*
+ * Copyright (c) 2015, Yahoo Inc. All rights reserved.
+ * Copyrights licensed under the New BSD License.
+ * See the accompanying LICENSE file for terms.
+ */
  
 if (process.argv.length < 3) {
   console.log('Usage: ' + process.argv[1] + ' configuration-file.js');
