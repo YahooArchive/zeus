@@ -7,7 +7,7 @@ YAML_CPP_INCLUDE_PATH ?= ./yaml-cpp/include
 CXXFLAGS += -g --std=c++11 -fPIC -Wall -I$(YAML_CPP_INCLUDE_PATH) -Wno-deprecated-declarations
 ENABLE_ASAN ?= false
 GDB ?= gdb
-CONFIGS ?= $(wildcard conf/*.yaml)
+CONFIGS ?= $(shell ls -1 conf/*.yaml | sort)
 OUTDIR := output
 export BIN ?= zeus
 
