@@ -41,12 +41,10 @@ DimensionTable::Entry & DimensionTable::insert(const std::string & s) {
 }
 
 Context DimensionTable::context(const DimensionTable::Input & i) {
-  Context::Dimensions dimensions;
-  dimensions.reserve(entries.size() + i.size());
+  Context::Dimensions dimensions(entries.size(), 0);
 
   for (const auto & item : i) {
     auto & entry = insert(item.first);
-    dimensions.insert(dimensions.end(), entry.did - dimensions.size() + 1, 0);
     dimensions[entry.did] = entry.values.insert(item.second).vid;
   }
 
