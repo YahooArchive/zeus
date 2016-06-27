@@ -19,7 +19,9 @@ endif
 
 -include Makefile.local
 
-all: $(OUTDIR)/configuration.cc $(OUTDIR)/configuration.h $(OUTDIR)/configuration-json.cc $(OUTDIR)/configuration-json.h $(OUTDIR)/configuration.js $(OUTDIR)/configuration.php
+all: $(OUTDIR)/configuration.cc $(OUTDIR)/configuration.h $(OUTDIR)/configuration-json.cc \
+	$(OUTDIR)/configuration-json.h $(OUTDIR)/configuration.js $(OUTDIR)/configuration.php \
+	$(OUTDIR)/Configuration.java
 
 src/$(BIN): yaml-cpp/libyaml-cpp.a $(shell ls -1 src/*.{cc,h} | xargs)
 	$(MAKE) -C src $(BIN);
@@ -44,6 +46,10 @@ $(OUTDIR)/configuration.js: $(BIN) $(OUTDIR)
 
 $(OUTDIR)/configuration.php: $(BIN) $(OUTDIR)
 	./$< $(CONFIGS) --php > $(OUTDIR)/configuration.php
+
+$(OUTDIR)/Configuration.java: $(BIN) $(OUTDIR)
+	./$< $(CONFIGS) --java > $@
+
 
 run: $(BIN)
 	./$< $(CONFIGS);

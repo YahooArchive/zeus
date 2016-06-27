@@ -59,6 +59,7 @@ void JavaGenerator::content(Printer & p, const Type::TYPES t,
     break;
 
   case Type::kObject:
+    p << "new " << c << "()";
     break;
 
   case Type::kString:
@@ -86,6 +87,25 @@ void JavaGenerator::value(Printer & p, const Value & value,
     } else if (value.type == Type::kObject) {
       for (const auto & item : value.properties) {
         this->value(p, item.second, prefix + "." + item.first, t);
+      }
+    } else if (value.type == Type::kDynamic) {
+      for (const auto & item : value.properties) {
+        if (item.second.ignore) {
+          continue;
+        }
+        const std::string dynamicPrefix = prefix + ".get(\"" + item.first + "\")";
+        if (item.second.type == Type::kArray
+            || item.second.type == Type::kDynamic) {
+        } else if (item.second.type == Type::kObject
+            && ! item.second.content.empty()) {
+            p << tab(t) << prefix << ".put(\"" << item.first << "\", new "
+              << item.second.content << "());" << "\n";
+          this->value(p, item.second, dynamicPrefix, t);
+        } else if ( ! item.second.content.empty()) {
+            p << tab(t) << prefix << ".put(\"" << item.first << "\", ";
+            content(p, item.second.type, item.second.content);
+            p << ");" << "\n";
+        }
       }
     } else {
       assert(false);
@@ -321,7 +341,12 @@ std::string JavaGenerator::type(const std::string & t, const ir::Kind k) const {
   }
 
   if (t == "boolean") {
-    result += "boolean";
+    if (k == ir::kArray
+        || k == ir::kDynamic) {
+      result += "Boolean";
+    } else {
+      result += "boolean";
+    }
 
   //TODO(dmorilha): what about making this configurable?
   } else if (t == "float") {
