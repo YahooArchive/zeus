@@ -29,6 +29,7 @@
 #include "cpp-header.h"
 #include "cpp-json-code.h"
 #include "cpp-json-header.h"
+#include "dart.h"
 #include "java.h"
 #include "js.h"
 #include "php.h"
@@ -51,6 +52,7 @@ int main(int argc, char * * argv) {
     cppHeader = false,
     cppJsonCode = false,
     cppJsonHeader = false,
+    dart = false,
     java = false,
     js = false,
     php = true;
@@ -68,6 +70,7 @@ int main(int argc, char * * argv) {
       cppHeader |= strcmp(argv[i] + 1, "-cpp-header") == 0;
       cppJsonCode |= strcmp(argv[i] + 1, "-cpp-json-code") == 0;
       cppJsonHeader |= strcmp(argv[i] + 1, "-cpp-json-header") == 0;
+      dart |= strcmp(argv[i] + 1, "-dart") == 0;
       java |= strcmp(argv[i] + 1, "-java") == 0;
       js |= strcmp(argv[i] + 1, "-js") == 0;
       php |= strcmp(argv[i] + 1, "-php") == 0;
@@ -149,6 +152,8 @@ int main(int argc, char * * argv) {
     generator.reset(new CPPJsonCodeGenerator());
   } else if (cppJsonHeader) {
     generator.reset(new CPPJsonHeaderGenerator());
+  } else if (dart) {
+    generator.reset(new DartGenerator());
   } else if (java) {
     generator.reset(new JavaGenerator());
   } else if (js) {
@@ -159,6 +164,7 @@ int main(int argc, char * * argv) {
     std::cout << "Available options are" << "\n"
       << " --cpp-code: generates C++ code ouput." << "\n"
       << " --cpp-header: generates C++ header output." << "\n"
+      << " --dart: generates Dart output." << "\n"
       << " --java: generates Java output." << "\n"
       << " --js: generates JS output." << "\n"
       << " --php: generates PHP output." << "\n"

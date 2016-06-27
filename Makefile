@@ -21,7 +21,7 @@ endif
 
 all: $(OUTDIR)/configuration.cc $(OUTDIR)/configuration.h $(OUTDIR)/configuration-json.cc \
 	$(OUTDIR)/configuration-json.h $(OUTDIR)/configuration.js $(OUTDIR)/configuration.php \
-	$(OUTDIR)/Configuration.java
+	$(OUTDIR)/Configuration.java $(OUTDIR)/configuration.dart
 
 src/$(BIN): yaml-cpp/libyaml-cpp.a $(shell ls -1 src/*.{cc,h} | xargs)
 	$(MAKE) -C src $(BIN);
@@ -49,6 +49,10 @@ $(OUTDIR)/configuration.php: $(BIN) $(OUTDIR)
 
 $(OUTDIR)/Configuration.java: $(BIN) $(OUTDIR)
 	./$< $(CONFIGS) --java > $@
+
+$(OUTDIR)/configuration.dart: $(BIN) $(OUTDIR)
+	./$< $(CONFIGS) --dart > $@
+
 
 
 run: $(BIN)
