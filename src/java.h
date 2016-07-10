@@ -35,6 +35,20 @@ struct JavaGenerator : public Generator {
   void value(Printer &, const Value &, const std::string &, const int);
 
   std::string type(const std::string &, const ir::Kind k = ir::kNone) const;
+
+  bool nativeType(const std::string & s) const {
+    return s == "boolean"
+      || s == "float"
+      || s == "integer"
+      || s == "string";
+  }
+
+  template < class T >
+  bool constructor(const T & t) {
+    return ! nativeType(t.type)
+      || t.kind == ir::kDynamic
+      || t.kind == ir::kArray;
+  }
 };
 
 #endif //JAVA_H

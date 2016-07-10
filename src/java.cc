@@ -15,19 +15,28 @@ void JavaGenerator::structure (Printer & p, const ir::Structure & structure) {
   p << "class " << id << " {" << "\n";
 
   {
-    bool constructor = false;
+    bool requiresConstructor = false;
 
     ir::Structure::Properties properties = structure.properties;
     std::sort(std::begin(properties), std::end(properties));
 
     for (const auto & property : properties) {
-      p << tab(1) << type(property.type, property.kind) << " "
+      p << tab(1) << "public " << type(property.type, property.kind) << " "
         << identifier(property.property) << ";" << "\n";
+
+      requiresConstructor |= constructor(property);
     }
 
-    if (constructor) {
+    if (requiresConstructor) {
       p << "\n"
-        << tab(1) << id << "() { }" << "\n";
+        << tab(1) << id << "() {" << "\n";
+      for (const auto & property : properties) {
+          if (constructor(property)) {
+            p << tab(2) << identifier(property.property) << " = new "
+              << type(property.type, property.kind) << "();" << "\n";
+          }
+      }
+      p << tab(1) << "}" << "\n";
     }
 
     p << "}" << "\n"
@@ -95,16 +104,20 @@ void JavaGenerator::value(Printer & p, const Value & value,
         }
         const std::string dynamicPrefix = prefix + ".get(\"" + item.first + "\")";
         if (item.second.type == Type::kArray
-            || item.second.type == Type::kDynamic) {
-        } else if (item.second.type == Type::kObject
-            && ! item.second.content.empty()) {
+            || item.second.type == Type::kDynamic
+            || item.second.type == Type::kObject) {
+
+          if ( ! item.second.content.empty()) {
             p << tab(t) << prefix << ".put(\"" << item.first << "\", new "
               << item.second.content << "());" << "\n";
+          }
+
           this->value(p, item.second, dynamicPrefix, t);
+
         } else if ( ! item.second.content.empty()) {
-            p << tab(t) << prefix << ".put(\"" << item.first << "\", ";
-            content(p, item.second.type, item.second.content);
-            p << ");" << "\n";
+          p << tab(t) << prefix << ".put(\"" << item.first << "\", ";
+          content(p, item.second.type, item.second.content);
+          p << ");" << "\n";
         }
       }
     } else {
@@ -178,7 +191,13 @@ void JavaGenerator::key(Printer & p, const ir::Key & key,
 
   if (key.cache) { }
 
-  p << tab(2) << type << " value = new " << type << "();" << "\n";
+  p << tab(2) << type << " value";
+
+  if (constructor(key)) {
+    p << " = new " << type << "()";
+  }
+
+  p << ";" << "\n";
 
   if ( ! (key.value.properties.empty() && key.value.content.empty())) {
     value(p, key.value, "value", 2);
@@ -189,8 +208,7 @@ void JavaGenerator::key(Printer & p, const ir::Key & key,
   }
 
   p << tab(2) << "return value;" << "\n"
-    << tab(1) << "}" << "\n"
-    << "\n";
+    << tab(1) << "}" << "\n";
 }
 
 void JavaGenerator::contextClass(Printer & p, const ir::Snapshot & snapshot) {
@@ -236,13 +254,18 @@ void JavaGenerator::configurationClass(Printer & p, const ir::Snapshot & snapsho
 
     p << tab(1) << "//print each configuration key" << "\n";
 
+    bool first = true;
     for (const auto & key : keys) {
+      if (first) {
+        first = false;
+      } else {
+        p << "\n";
+      }
       this->key(p, key, snapshot.dimensions);
     }
   }
 
-  p << "};" << "\n"
-    << "\n";
+  p << "};" << "\n";
 }
 
 void JavaGenerator::dimension(Printer & p, const ir::DimensionEnumeration & dimension) {
