@@ -1,18 +1,17 @@
-/*
- * Copyright (c) 2015, Yahoo Inc. All rights reserved.
+/* * Copyright (c) 2015, Yahoo Inc. All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
 
-#ifndef JAVA_H
-#define JAVA_H
+#ifndef DART_H
+#define DART_H
 
 #include <string>
 
 #include "generator.h"
 #include "ir.h"
 
-struct JavaGenerator : public Generator {
+struct DartGenerator : public Generator {
   void header(Printer &, const ir::Namespaces &);
 
   void structure(Printer &, const ir::Structure &);
@@ -51,4 +50,4 @@ struct JavaGenerator : public Generator {
   }
 };
 
-#endif //JAVA_H
+#endif //DART_H

@@ -7,7 +7,7 @@ YAML_CPP_INCLUDE_PATH ?= ./yaml-cpp/include
 CXXFLAGS += -g --std=c++11 -fPIC -Wall -I$(YAML_CPP_INCLUDE_PATH) -Wno-deprecated-declarations
 ENABLE_ASAN ?= false
 GDB ?= gdb
-CONFIGS ?= $(wildcard conf/*.yaml)
+CONFIGS ?= $(shell ls -1 conf/*.yaml | sort)
 OUTDIR := output
 export BIN ?= zeus
 
@@ -19,7 +19,9 @@ endif
 
 -include Makefile.local
 
-all: $(OUTDIR)/configuration.cc $(OUTDIR)/configuration.h $(OUTDIR)/configuration-json.cc $(OUTDIR)/configuration-json.h $(OUTDIR)/configuration.js $(OUTDIR)/configuration.php
+all: $(OUTDIR)/configuration.cc $(OUTDIR)/configuration.h $(OUTDIR)/configuration-json.cc \
+	$(OUTDIR)/configuration-json.h $(OUTDIR)/configuration.js $(OUTDIR)/configuration.php \
+	$(OUTDIR)/Configuration.java $(OUTDIR)/configuration.dart
 
 src/$(BIN): yaml-cpp/libyaml-cpp.a $(shell ls -1 src/*.{cc,h} | xargs)
 	$(MAKE) -C src $(BIN);
@@ -44,6 +46,14 @@ $(OUTDIR)/configuration.js: $(BIN) $(OUTDIR)
 
 $(OUTDIR)/configuration.php: $(BIN) $(OUTDIR)
 	./$< $(CONFIGS) --php > $(OUTDIR)/configuration.php
+
+$(OUTDIR)/Configuration.java: $(BIN) $(OUTDIR)
+	./$< $(CONFIGS) --java > $@
+
+$(OUTDIR)/configuration.dart: $(BIN) $(OUTDIR)
+	./$< $(CONFIGS) --dart > $@
+
+
 
 run: $(BIN)
 	./$< $(CONFIGS);

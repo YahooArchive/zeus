@@ -7,9 +7,9 @@
 #include <algorithm>
 #include <assert.h>
 
-#include "java.h"
+#include "dart.h"
 
-void JavaGenerator::structure (Printer & p, const ir::Structure & structure) {
+void DartGenerator::structure (Printer & p, const ir::Structure & structure) {
   const auto id = identifier(structure.identifier);
 
   p << "class " << id << " {" << "\n";
@@ -21,7 +21,7 @@ void JavaGenerator::structure (Printer & p, const ir::Structure & structure) {
     std::sort(std::begin(properties), std::end(properties));
 
     for (const auto & property : properties) {
-      p << tab(1) << "public " << type(property.type, property.kind) << " "
+      p << tab(1) << type(property.type, property.kind) << " "
         << identifier(property.property) << ";" << "\n";
 
       requiresConstructor |= constructor(property);
@@ -29,14 +29,20 @@ void JavaGenerator::structure (Printer & p, const ir::Structure & structure) {
 
     if (requiresConstructor) {
       p << "\n"
-        << tab(1) << id << "() {" << "\n";
+        << tab(1) << id << "() :" << "\n";
+      bool first = true;
       for (const auto & property : properties) {
           if (constructor(property)) {
+            if (first) {
+              first = false;
+            } else {
+              p << "," << "\n";
+            }
             p << tab(2) << identifier(property.property) << " = new "
-              << type(property.type, property.kind) << "();" << "\n";
+              << type(property.type, property.kind) << "()";
           }
       }
-      p << tab(1) << "}" << "\n";
+      p << ";" << "\n";
     }
 
     p << "}" << "\n"
@@ -44,7 +50,7 @@ void JavaGenerator::structure (Printer & p, const ir::Structure & structure) {
   }
 }
 
-void JavaGenerator::content(Printer & p, const Type::TYPES t,
+void DartGenerator::content(Printer & p, const Type::TYPES t,
     const std::string & c) {
 
   switch (t) {
@@ -84,7 +90,7 @@ void JavaGenerator::content(Printer & p, const Type::TYPES t,
   }
 }
 
-void JavaGenerator::value(Printer & p, const Value & value,
+void DartGenerator::value(Printer & p, const Value & value,
     const std::string & prefix, const int t) {
   if ( ! value.properties.empty()) {
     if (value.type == Type::kArray) {
@@ -102,23 +108,15 @@ void JavaGenerator::value(Printer & p, const Value & value,
         if (item.second.ignore) {
           continue;
         }
-        const std::string dynamicPrefix = prefix + ".get(\"" + item.first + "\")";
-        if (item.second.type == Type::kArray
-            || item.second.type == Type::kDynamic
-            || item.second.type == Type::kObject) {
-
-          if ( ! item.second.content.empty()) {
-            p << tab(t) << prefix << ".put(\"" << item.first << "\", new "
-              << item.second.content << "());" << "\n";
-          }
-
-          this->value(p, item.second, dynamicPrefix, t);
-
-        } else if ( ! item.second.content.empty()) {
-          p << tab(t) << prefix << ".put(\"" << item.first << "\", ";
-          content(p, item.second.type, item.second.content);
-          p << ");" << "\n";
+        const std::string dynamicPrefix = prefix + "[\"" + item.first + "\"]";
+        if ((item.second.type == Type::kArray
+              || item.second.type == Type::kDynamic
+              || item.second.type == Type::kObject)
+            && ! item.second.content.empty()) {
+          p << tab(t) << dynamicPrefix << " = new "
+            << item.second.content << "();" << "\n";
         }
+        this->value(p, item.second, dynamicPrefix, t);
       }
     } else {
       assert(false);
@@ -131,7 +129,7 @@ void JavaGenerator::value(Printer & p, const Value & value,
   }
 }
 
-void JavaGenerator::keyDimension(Printer & p, const ir::Key & key,
+void DartGenerator::keyDimension(Printer & p, const ir::Key & key,
     const ir::Dimension & dimension, const ir::Dimensions & dimensions,
     const int t) {
 
@@ -152,7 +150,8 @@ void JavaGenerator::keyDimension(Printer & p, const ir::Key & key,
       const auto & values = iterator->second.values;
       assert(values.size() > item.index);
 
-      p << tab(t) << "case " << constantify(values[item.index].first)
+      p << tab(t) << "case " << constantify(dimension.dimension)
+        << "." <<  constantify(values[item.index].first)
         << ":" << "\n";
     }
 
@@ -183,7 +182,7 @@ void JavaGenerator::keyDimension(Printer & p, const ir::Key & key,
   }
 }
 
-void JavaGenerator::key(Printer & p, const ir::Key & key,
+void DartGenerator::key(Printer & p, const ir::Key & key,
     const ir::Dimensions & dimensions) {
   const std::string type = this->type(key.type, key.kind);
 
@@ -211,7 +210,7 @@ void JavaGenerator::key(Printer & p, const ir::Key & key,
     << tab(1) << "}" << "\n";
 }
 
-void JavaGenerator::contextClass(Printer & p, const ir::Snapshot & snapshot) {
+void DartGenerator::contextClass(Printer & p, const ir::Snapshot & snapshot) {
 
   p << "class Context {" << "\n";
 
@@ -238,14 +237,12 @@ void JavaGenerator::contextClass(Printer & p, const ir::Snapshot & snapshot) {
     << "\n";
 }
 
-void JavaGenerator::configurationClass(Printer & p, const ir::Snapshot & snapshot) {
+void DartGenerator::configurationClass(Printer & p, const ir::Snapshot & snapshot) {
 
-  p << "public class Configuration {" << "\n"
+  p << "class Configuration {" << "\n"
     << tab(1) << "final Context context;" << "\n"
     << "\n"
-    << tab(1) << "Configuration(Context c) {" << "\n"
-    << tab(2) << "this.context = c;" << "\n"
-    << tab(1) << "}" << "\n"
+    << tab(1) << "Configuration(this.context);" << "\n"
     << "\n";
 
   {
@@ -265,10 +262,11 @@ void JavaGenerator::configurationClass(Printer & p, const ir::Snapshot & snapsho
     }
   }
 
-  p << "};" << "\n";
+  p << "}" << "\n"
+    << "\n";
 }
 
-void JavaGenerator::dimension(Printer & p, const ir::DimensionEnumeration & dimension) {
+void DartGenerator::dimension(Printer & p, const ir::DimensionEnumeration & dimension) {
 
   const std::string enumerationName = constantify(dimension.dimension);
 
@@ -277,24 +275,11 @@ void JavaGenerator::dimension(Printer & p, const ir::DimensionEnumeration & dime
 
   p << "enum " << enumerationName << " {" << "\n";
 
-  if ( ! values.empty()) {
-    bool first = true;
-    for (const auto & value : values) {
-      if (first) {
-        first = false;
-      } else {
-        p << "," << "\n";
-      }
-      p << tab(1) << constantify(value.first) << "(" << value.second << ")";
-    }
-    p << ";" << "\n";
+  for (const auto & value : values) {
+    p << tab(1) << constantify(value.first) << "," << "\n";
   }
 
-  p << tab(1) << "private final int value;" << "\n"
-    << tab(1) << enumerationName << "(int value) {" << "\n"
-    << tab(2) << "this.value = value;" << "\n"
-    << tab(1) << "}" << "\n"
-    << "}" << "\n"
+  p << "}" << "\n"
     << "\n";
 
   /*
@@ -312,7 +297,7 @@ void JavaGenerator::dimension(Printer & p, const ir::DimensionEnumeration & dime
    */
 }
 
-void JavaGenerator::generate(Printer & p, const ir::Snapshot & snapshot) {
+void DartGenerator::generate(Printer & p, const ir::Snapshot & snapshot) {
   header(p, snapshot.namespaces);
 
   {
@@ -332,7 +317,8 @@ void JavaGenerator::generate(Printer & p, const ir::Snapshot & snapshot) {
   configurationClass(p, snapshot);
 }
 
-void JavaGenerator::header(Printer & p, const ir::Namespaces & n) {
+void DartGenerator::header(Printer & p, const ir::Namespaces & n) {
+  /*
   if ( ! n.empty()) {
     bool first = true;
     p << "package ";
@@ -347,29 +333,24 @@ void JavaGenerator::header(Printer & p, const ir::Namespaces & n) {
     p << ";" << "\n"
       "\n";
   }
+  */
 
-  p << "import java.util.ArrayList;" << "\n"
-    << "import java.util.HashMap;" << "\n"
+  p << "import 'dart:collection';" << "\n"
     << "\n";
 }
 
-std::string JavaGenerator::type(const std::string & t, const ir::Kind k) const {
+std::string DartGenerator::type(const std::string & t, const ir::Kind k) const {
   std::string result;
 
   //TODO(dmorilha): size is known, using vector is unecessary here.
   if (k == ir::kArray) {
-    result += "ArrayList< ";
+    result += "List< ";
   } else if (k == ir::kDynamic) {
     result += "HashMap< String, ";
   }
 
   if (t == "boolean") {
-    if (k == ir::kArray
-        || k == ir::kDynamic) {
-      result += "Boolean";
-    } else {
-      result += "boolean";
-    }
+    result += "bool";
 
   //TODO(dmorilha): what about making this configurable?
   } else if (t == "float") {
@@ -377,7 +358,7 @@ std::string JavaGenerator::type(const std::string & t, const ir::Kind k) const {
 
   //TODO(dmorilha): what about making this configurable?
   } else if (t == "integer") {
-    result += "long";
+    result += "int";
 
   } else if (t == "string") {
     result += "String";
