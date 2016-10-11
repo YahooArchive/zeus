@@ -30,9 +30,11 @@ void contextSort(Graph & g) {
     const Graph::edge_descriptor a = edges[i];
     for (size_t j = i + 1; j < size; ++j) {
       const Graph::edge_descriptor b = edges[j];
+      const Context r = g[b];
       if (g[a].contains(g[b])) {
-        const Context r = g[b];
         edges.push_back(add_edge(target(a, g), target(b, g), r, g).first);
+      } else {
+        edges.push_back(add_edge(*vertices(g).first, target(b, g), r, g).first);
       }
     }
   }

@@ -48,11 +48,13 @@ bool handleSpecialKeys(KeyTable::Entries::value_type & k) {
 
 int main(int argc, char * * argv) {
 
-  bool cppCode = false,
+  bool
+    cppCode = false,
     cppHeader = false,
     cppJsonCode = false,
     cppJsonHeader = false,
     dart = false,
+    graphPrinter = false,
     java = false,
     js = false,
     php = true;
@@ -71,6 +73,7 @@ int main(int argc, char * * argv) {
       cppJsonCode |= strcmp(argv[i] + 1, "-cpp-json-code") == 0;
       cppJsonHeader |= strcmp(argv[i] + 1, "-cpp-json-header") == 0;
       dart |= strcmp(argv[i] + 1, "-dart") == 0;
+      graphPrinter |= strcmp(argv[i] + 1, "-graph-printer") == 0;
       java |= strcmp(argv[i] + 1, "-java") == 0;
       js |= strcmp(argv[i] + 1, "-js") == 0;
       php |= strcmp(argv[i] + 1, "-php") == 0;
@@ -128,6 +131,13 @@ int main(int argc, char * * argv) {
         irKey.type = structures.getTypeName(key.type);
         irKey.alias = key.alias;
       }
+
+      if (graphPrinter) {
+        std::cout << "graph for key \"" << item.first << "\"" << std::endl;
+        GraphPrinter printer(std::cout);
+        printer.print(graph, r.dimensions);
+        std::cout << std::endl;
+      }
     }
 
     {
@@ -136,47 +146,51 @@ int main(int argc, char * * argv) {
     }
 
     snapshot.dimensions = r.dimensions.enumerate();
+
   } catch (const std::exception & e) { }
 
   //TODO(dmorilha): validate keys against the actual keys
 
-  Printer p(std::cout);
+  if ( ! graphPrinter) {
+    Printer p(std::cout);
 
-  Generator::Pointer generator;
+    Generator::Pointer generator;
 
-  if (cppCode) {
-    generator.reset(new CPPCodeGenerator());
-  } else if (cppHeader) {
-    generator.reset(new CPPHeaderGenerator());
-  } else if (cppJsonCode) {
-    generator.reset(new CPPJsonCodeGenerator());
-  } else if (cppJsonHeader) {
-    generator.reset(new CPPJsonHeaderGenerator());
-  } else if (dart) {
-    generator.reset(new DartGenerator());
-  } else if (java) {
-    generator.reset(new JavaGenerator());
-  } else if (js) {
-    generator.reset(new JSGenerator());
-  } else if (php) {
-    generator.reset(new PHPGenerator());
-  } else {
-    std::cout << "Available options are" << "\n"
-      << " --cpp-code: generates C++ code ouput." << "\n"
-      << " --cpp-header: generates C++ header output." << "\n"
-      << " --dart: generates Dart output." << "\n"
-      << " --java: generates Java output." << "\n"
-      << " --js: generates JS output." << "\n"
-      << " --php: generates PHP output." << "\n"
-      << " --set dimension:value[,value...] "
-      "limits a certain dimension to only these values." << "\n";
+    if (cppCode) {
+      generator.reset(new CPPCodeGenerator());
+    } else if (cppHeader) {
+      generator.reset(new CPPHeaderGenerator());
+    } else if (cppJsonCode) {
+      generator.reset(new CPPJsonCodeGenerator());
+    } else if (cppJsonHeader) {
+      generator.reset(new CPPJsonHeaderGenerator());
+    } else if (dart) {
+      generator.reset(new DartGenerator());
+    } else if (java) {
+      generator.reset(new JavaGenerator());
+    } else if (js) {
+      generator.reset(new JSGenerator());
+    } else if (php) {
+      generator.reset(new PHPGenerator());
+    } else {
+      std::cout << "Available options are" << "\n"
+        << " --cpp-code: generates C++ code ouput." << "\n"
+        << " --cpp-header: generates C++ header output." << "\n"
+        << " --dart: generates Dart output." << "\n"
+        << " --graph-printer: prints each key graph." << "\n"
+        << " --java: generates Java output." << "\n"
+        << " --js: generates JS output." << "\n"
+        << " --php: generates PHP output." << "\n"
+        << " --set dimension:value[,value...] "
+        "limits a certain dimension to only these values." << "\n";
 
-    return 0;
+      return 0;
+    }
+
+    assert(static_cast< bool >(generator));
+
+    generator->generate(p, snapshot);
   }
 
-  assert(static_cast< bool >(generator));
-
-  generator->generate(p, snapshot);
-
   return 0;
-}
+  }
