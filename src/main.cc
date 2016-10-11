@@ -33,6 +33,7 @@
 #include "java.h"
 #include "js.h"
 #include "php.h"
+#include "python.h"
 
 bool handleSpecialKeys(KeyTable::Entries::value_type & k) {
   bool result = false;
@@ -57,7 +58,8 @@ int main(int argc, char * * argv) {
     graphPrinter = false,
     java = false,
     js = false,
-    php = true;
+    php = true,
+    python = false;
 
   std::vector< const char * > files;
 
@@ -77,6 +79,7 @@ int main(int argc, char * * argv) {
       java |= strcmp(argv[i] + 1, "-java") == 0;
       js |= strcmp(argv[i] + 1, "-js") == 0;
       php |= strcmp(argv[i] + 1, "-php") == 0;
+      python |= strcmp(argv[i] + 1, "-python") == 0;
 
       if (strcmp(argv[i] + 1, "-set") == 0) {
         ++i;
@@ -150,7 +153,7 @@ int main(int argc, char * * argv) {
   } catch (const std::exception & e) { }
 
   //TODO(dmorilha): validate keys against the actual keys
-
+  //
   if ( ! graphPrinter) {
     Printer p(std::cout);
 
@@ -170,6 +173,8 @@ int main(int argc, char * * argv) {
       generator.reset(new JavaGenerator());
     } else if (js) {
       generator.reset(new JSGenerator());
+    } else if (python) {
+      generator.reset(new PythonGenerator());
     } else if (php) {
       generator.reset(new PHPGenerator());
     } else {
@@ -181,6 +186,7 @@ int main(int argc, char * * argv) {
         << " --java: generates Java output." << "\n"
         << " --js: generates JS output." << "\n"
         << " --php: generates PHP output." << "\n"
+        << " --python: generates Python output." << "\n"
         << " --set dimension:value[,value...] "
         "limits a certain dimension to only these values." << "\n";
 
@@ -193,4 +199,4 @@ int main(int argc, char * * argv) {
   }
 
   return 0;
-  }
+}
