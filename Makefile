@@ -21,7 +21,8 @@ endif
 
 all: $(OUTDIR)/configuration.cc $(OUTDIR)/configuration.h $(OUTDIR)/configuration-json.cc \
 	$(OUTDIR)/configuration-json.h $(OUTDIR)/configuration.js $(OUTDIR)/configuration.php \
-	$(OUTDIR)/Configuration.java $(OUTDIR)/configuration.dart $(OUTDIR)/configuration.py
+	$(OUTDIR)/Configuration.java $(OUTDIR)/configuration.dart $(OUTDIR)/configuration.py \
+	graph-printer
 
 src/$(BIN): yaml-cpp/libyaml-cpp.a $(shell ls -1 src/*.{cc,h} | xargs)
 	$(MAKE) -C src $(BIN);
@@ -56,9 +57,11 @@ $(OUTDIR)/configuration.dart: $(BIN) $(OUTDIR)
 $(OUTDIR)/configuration.py: $(BIN) $(OUTDIR)
 	./$< $(CONFIGS) --python > $@
 
+graph-printer: $(BIN)
+	./$< $(CONFIGS) --graph-printer > /dev/null
+
 run: src/$(BIN)
 	@cp -fv $< $@;
-	./$< $(CONFIGS);
 
 gdb: $(BIN)
 	$(GDB) -ex run -ex quit --args ./$< $(CONFIGS);
